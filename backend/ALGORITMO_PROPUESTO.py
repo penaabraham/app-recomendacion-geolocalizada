@@ -80,13 +80,22 @@ def haversine(lat1, lon1, lat2, lon2):
     return d
 
 # Añadir distancia a los productos
-def add_distance(user_id):
-    user_location = locations[locations['user_id'] == user_id]
+# --- MODIFICACIÓN EN LA FUNCIÓN DE DISTANCIA ---
+def add_distance(user_id, lat_usuario=None, lon_usuario=None):
+    # Si el celular manda coordenadas (lat/lon), las usamos.
+    # Si no, buscamos en el DataFrame 'locations' como antes.
+    if lat_usuario is not None and lon_usuario is not None:
+        u_lat, u_lon = lat_usuario, lon_usuario
+    else:
+        user_loc = locations[locations['user_id'] == user_id]
+        u_lat, u_lon = user_loc['latitude'].values[0], user_loc['longitude'].values[0]
+    
     distances = []
     for index, product in products.iterrows():
-        distance = haversine(user_location['latitude'].values[0], user_location['longitude'].values[0], product['latitude'], product['longitude'])
-        distances.append(distance)
+        dist = haversine(u_lat, u_lon, product['latitude'], product['longitude'])
+        distances.append(dist)
     products['distance'] = distances
+    return u_lat, u_lon # Devolvemos las coordenadas usadas
 
 # Asignar la distancia para todos los usuarios antes de la recomendación
 for user_id in locations['user_id']:
@@ -121,30 +130,25 @@ model.fit(data, labels, epochs=10, batch_size=32, validation_split=0.2)
 
 # Generación de Recomendaciones
 
-def recommend(user_id):
-    add_distance(user_id)
+# --- MODIFICACIÓN EN LA FUNCIÓN RECOMMEND ---
+def recommend(user_id, lat_manual=None, lon_manual=None):
+    # 1. Actualizar distancias con la ubicación real del celular
+    u_lat, u_lon = add_distance(user_id, lat_manual, lon_manual)
     
-    # Filtrado colaborativo: recomendar productos calificados por usuarios similares
-    user_index = ratings['user_id'].unique().tolist().index(user_id)
-    sim_scores = list(enumerate(user_sim[user_index]))
-    sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
-    user_ratings = ratings[ratings['user_id'] == user_id]
+    # 2. Determinar a qué cluster pertenece la ubicación actual del celular
+    # El modelo KMeans predice el cluster para la posición recibida
+    user_cluster = kmeans.predict([[u_lat, u_lon]])[0]
     
-    # Filtrado basado en contenido: productos similares basados en comentarios
-    item_indices = comments['item_id'].tolist()
-    sim_items = cosine_sim[item_indices.index(user_ratings['item_id'].values[0])]
+    # 3. Filtrar productos por el cluster detectado
+    cluster_products = products[products['cluster'] == user_cluster].copy()
 
-    # Geolocalización: priorizar productos cercanos
-    products_sorted = products.sort_values('distance')
-
-    # Incorporar clusters de ubicaciones
-    user_cluster = locations[locations['user_id'] == user_id]['cluster'].values[0]
-    cluster_products = products[products['cluster'] == user_cluster]
-
-    # Combinar los resultados (esto puede ser ajustado según la necesidad)
-    recommendations = cluster_products.sort_values('distance').head(5)  # Tomar los 5 productos más cercanos dentro del mismo cluster
+    # 4. Si el cluster está vacío (porque estás muy lejos), mostrar los más cercanos globales
+    if cluster_products.empty:
+        recommendations = products.sort_values('distance').head(5).copy()
+    else:
+        recommendations = cluster_products.sort_values('distance').head(5).copy()
     
-    # Añadir etiqueta "km" a las distancias
+    # 5. Formatear salida
     recommendations['distance'] = recommendations['distance'].apply(lambda x: f"{x:.2f} km")
     
     return recommendations[['name', 'distance']]
