@@ -20,3 +20,11 @@ def obtener_recomendacion(
     
     # 4. Convertimos a diccionario (records) para que Flutter lo entienda
     return resultado.to_dict(orient='records')
+
+@app.get("/")
+def read_root():
+    return {
+        "status": "online",
+        "message": "API de Recomendación Geolocalizada funcionando correctamente",
+        "version": "1.0.0"
+    }

@@ -53,7 +53,7 @@ class _RecsPageState extends State<RecsPage> {
 
       // 3. Llamar a tu PC (Usa tu IP 192.168.1.105)
       // Enviamos lat y lon como parámetros en la URL
-      final url = 'http://192.168.1.105:8000/recomendar/1?lat=${position.latitude}&lon=${position.longitude}';
+      final url = 'https://app-recomendacion-geolocalizada.onrender.com/recomendar/1?lat=${position.latitude}&lon=${position.longitude}';
       
       final response = await http.get(Uri.parse(url));
 
