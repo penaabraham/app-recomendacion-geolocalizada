@@ -24,7 +24,7 @@ ratings = pd.DataFrame({
 comments = pd.DataFrame({
     'item_id': [101, 102, 103, 104, 105],
     'comment': [
-        "Excelente iPhone 12, muy recomendable", 
+        "Excelente YAOS - Electrónica y Papelería, muy recomendable", 
         "Samsung Galaxy S21, buena compra",
         "Google Pixel 5, buena relación calidad-precio",
         "Refrigerador LG, muy eficiente",
@@ -42,9 +42,9 @@ locations = pd.DataFrame({
 # Datos de productos con ubicaciones en diferentes ciudades (ligeramente diferentes)
 products = pd.DataFrame({
     'item_id': [101, 102, 103, 104, 105],
-    'name': ["iPhone 12", "Samsung Galaxy S21", "Google Pixel 5", "Refrigerador LG", "Refrigerador Samsung"],
-    'latitude': [34.0525, 36.1600, 40.7100, 41.8800, 34.0630],  # Coordenadas ajustadas para evitar coincidencias exactas
-    'longitude': [-118.2450, -115.1500, -74.0070, -87.6300, -118.2500]
+    'name': ["YAOS - Electrónica y Papelería", "Samsung Galaxy S21", "Google Pixel 5", "Refrigerador LG", "Refrigerador Samsung"],
+    'latitude': [19.9782, 36.1600, 40.7100, 41.8800, 34.0630],  # Coordenadas ajustadas para evitar coincidencias exactas
+    'longitude': [-98.6852, -115.1500, -74.0070, -87.6300, -118.2500]
 })
 
 # Preprocesamiento de Datos

@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:geolocator/geolocator.dart';
 import 'dart:convert';
 
 void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Recomendador Híbrido',
-      theme: ThemeData(primarySwatch: Colors.blue, useMaterial3: true),
+      debugShowCheckedModeBanner: false,
+      title: 'Recomendador GPS',
+      theme: ThemeData(primarySwatch: Colors.indigo, useMaterial3: true),
       home: const RecsPage(),
     );
   }
@@ -25,51 +28,90 @@ class RecsPage extends StatefulWidget {
 class _RecsPageState extends State<RecsPage> {
   List recommendations = [];
   bool isLoading = false;
+  String statusMessage = "Presiona el botón para buscar";
 
-  // FUNCIÓN CLAVE: Llama a tu servidor Python
-  Future<void> fetchRecommendations() async {
-    setState(() => isLoading = true);
+  // FUNCIÓN PARA OBTENER EL GPS Y LLAMAR AL BACKEND
+  Future<void> getRecommendations() async {
+    setState(() {
+      isLoading = true;
+      statusMessage = "Obteniendo ubicación...";
+    });
+
     try {
-      // USAMOS TU IP 192.168.1.105
-      final response = await http.get(
-        Uri.parse('http://192.168.1.105:8000/recomendar/1')
+      // 1. Verificar/Pedir permisos de GPS
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+      }
+
+      // 2. Obtener coordenadas actuales
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high
       );
+
+      setState(() => statusMessage = "Consultando Algoritmo...");
+
+      // 3. Llamar a tu PC (Usa tu IP 192.168.1.105)
+      // Enviamos lat y lon como parámetros en la URL
+      final url = 'http://192.168.1.105:8000/recomendar/1?lat=${position.latitude}&lon=${position.longitude}';
+      
+      final response = await http.get(Uri.parse(url));
 
       if (response.statusCode == 200) {
         setState(() {
           recommendations = json.decode(response.body);
           isLoading = false;
+          statusMessage = "Cerca de ti:";
         });
       }
     } catch (e) {
-      setState(() => isLoading = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: No se pudo conectar al servidor')),
-      );
+      setState(() {
+        isLoading = false;
+        statusMessage = "Error: $e";
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Mis Recomendaciones')),
-      body: isLoading 
-        ? const Center(child: CircularProgressIndicator())
-        : ListView.builder(
-            itemCount: recommendations.length,
-            itemBuilder: (context, index) {
-              final item = recommendations[index];
-              return ListTile(
-                leading: const Icon(Icons.shopping_cart, color: Colors.blue),
-                title: Text(item['name'] ?? 'Producto'),
-                subtitle: Text('Distancia: ${item['distance']}'),
-                trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-              );
-            },
+      appBar: AppBar(
+        title: const Text('Recomendaciones Reales'),
+        backgroundColor: Colors.indigo,
+        foregroundColor: Colors.white,
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(statusMessage, style: const TextStyle(fontWeight: FontWeight.bold)),
           ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: fetchRecommendations,
-        child: const Icon(Icons.refresh),
+          Expanded(
+            child: isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : recommendations.isEmpty
+                    ? const Center(child: Icon(Icons.location_off, size: 50, color: Colors.grey))
+                    : ListView.builder(
+                        itemCount: recommendations.length,
+                        itemBuilder: (context, index) {
+                          final item = recommendations[index];
+                          return Card(
+                            margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                            child: ListTile(
+                              leading: const Icon(Icons.place, color: Colors.redAccent),
+                              title: Text(item['name'], style: const TextStyle(fontWeight: FontWeight.bold)),
+                              subtitle: Text("Distancia calculada: ${item['distance']}"),
+                            ),
+                          );
+                        },
+                      ),
+          ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: getRecommendations,
+        label: const Text("Actualizar con GPS"),
+        icon: const Icon(Icons.gps_fixed),
       ),
     );
   }
