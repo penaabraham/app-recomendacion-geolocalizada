@@ -51,7 +51,6 @@ class _RecsPageState extends State<RecsPage> {
 
       setState(() => statusMessage = "Consultando Algoritmo...");
 
-      // 3. Llamar a tu PC (Usa tu IP 192.168.1.105)
       // Enviamos lat y lon como parámetros en la URL
       final url = 'https://app-recomendacion-geolocalizada.onrender.com/recomendar/1?lat=${position.latitude}&lon=${position.longitude}';
       

@@ -1,0 +1,201 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.2 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{nyt/global//global/global}
+    \entry{supermercado_recomendacion_localizacion}{thesis}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=b86adf99912b6261b2be7ffc3944a3e7}{%
+           family={Calderón\bibnamedelima Pacheco},
+           familyi={C\bibinitperiod\bibinitdelim P\bibinitperiod},
+           given={Miguel\bibnamedelima Ángel},
+           giveni={M\bibinitperiod\bibinitdelim Á\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=140ea8093b0109d7c97036f22d460890}{%
+           family={Vega\bibnamedelima Asto},
+           familyi={V\bibinitperiod\bibinitdelim A\bibinitperiod},
+           given={Pedro\bibnamedelimb Ahmed\bibnamedelimb Kevin\bibnamedelima Gonzalo},
+           giveni={P\bibinitperiod\bibinitdelim A\bibinitperiod\bibinitdelim K\bibinitperiod\bibinitdelim G\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{institution}{1}{%
+        {Pontificia Universidad Católica del Perú, Facultad de Ciencias e Ingeniería}%
+      }
+      \strng{namehash}{4dbc4d1fd33efac3c29fbed5a1bde421}
+      \strng{fullhash}{4dbc4d1fd33efac3c29fbed5a1bde421}
+      \strng{bibnamehash}{4dbc4d1fd33efac3c29fbed5a1bde421}
+      \strng{authorbibnamehash}{4dbc4d1fd33efac3c29fbed5a1bde421}
+      \strng{authornamehash}{4dbc4d1fd33efac3c29fbed5a1bde421}
+      \strng{authorfullhash}{4dbc4d1fd33efac3c29fbed5a1bde421}
+      \field{sortinit}{C}
+      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Sistema de información para la recomendación de productos basado en patrones de comportamiento y localización visual de una canasta de productos en un supermercado}
+      \field{type}{mathesis}
+      \field{year}{2015}
+    \endentry
+    \entry{rodas_sr_colaborativo}{article}{}
+      \name{author}{3}{}{%
+        {{un=0,uniquepart=base,hash=bbd97e01d9fc6a5182d7dd425f6af5b4}{%
+           family={Caro\bibnamedelima Piñeres},
+           familyi={C\bibinitperiod\bibinitdelim P\bibinitperiod},
+           given={Manuel\bibnamedelima Fernando},
+           giveni={M\bibinitperiod\bibinitdelim F\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=e44f0745e30306cf2ce579f2f1a166a0}{%
+           family={Hernández},
+           familyi={H\bibinitperiod},
+           given={Jaime},
+           giveni={J\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=c7958b5375a8e189fb46dab1085a8772}{%
+           family={Jiménez\bibnamedelima Builes},
+           familyi={J\bibinitperiod\bibinitdelim B\bibinitperiod},
+           given={Jovani\bibnamedelima Alberto},
+           giveni={J\bibinitperiod\bibinitdelim A\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{6dce24df15db6ef5be9d812684bb4a00}
+      \strng{fullhash}{6dce24df15db6ef5be9d812684bb4a00}
+      \strng{bibnamehash}{6dce24df15db6ef5be9d812684bb4a00}
+      \strng{authorbibnamehash}{6dce24df15db6ef5be9d812684bb4a00}
+      \strng{authornamehash}{6dce24df15db6ef5be9d812684bb4a00}
+      \strng{authorfullhash}{6dce24df15db6ef5be9d812684bb4a00}
+      \field{sortinit}{C}
+      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Ciencia e Ingeniería Neogranadina}
+      \field{number}{1}
+      \field{title}{Diseño de un sistema de recomendación en repositorios de objetos de aprendizaje basado en la percepción del usuario: Caso RODAS}
+      \field{volume}{21}
+      \field{year}{2011}
+      \field{pages}{51\bibrangedash 72}
+      \range{pages}{22}
+    \endentry
+    \entry{clusterdoc_agrupamiento}{article}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=b180fdcc825ffd200ae6cd47e2e5588e}{%
+           family={Giugni\bibnamedelima O},
+           familyi={G\bibinitperiod\bibinitdelim O\bibinitperiod},
+           given={Marylin},
+           giveni={M\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=b58d655097f197b3dfc8f34d5f562170}{%
+           family={León\bibnamedelima G},
+           familyi={L\bibinitperiod\bibinitdelim G\bibinitperiod},
+           given={Luis},
+           giveni={L\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{4648032d248e02f3225c32243eede832}
+      \strng{fullhash}{4648032d248e02f3225c32243eede832}
+      \strng{bibnamehash}{4648032d248e02f3225c32243eede832}
+      \strng{authorbibnamehash}{4648032d248e02f3225c32243eede832}
+      \strng{authornamehash}{4648032d248e02f3225c32243eede832}
+      \strng{authorfullhash}{4648032d248e02f3225c32243eede832}
+      \field{sortinit}{G}
+      \field{sortinithash}{32d67eca0634bf53703493fb1090a2e8}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Universidad, Ciencia y Tecnología}
+      \field{number}{60}
+      \field{title}{ClusterDoc: un sistema de recuperación y recomendación de documentos basado en algoritmos de agrupamiento}
+      \field{volume}{15}
+      \field{year}{2011}
+      \field{pages}{121\bibrangedash 129}
+      \range{pages}{9}
+    \endentry
+    \entry{dael_recomendacion_hibrida}{unpublished}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=8ff2a7374a2c7f04b31824c07908ec2e}{%
+           family={Martínez\bibnamedelima Simón},
+           familyi={M\bibinitperiod\bibinitdelim S\bibinitperiod},
+           given={Dael},
+           giveni={D\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{8ff2a7374a2c7f04b31824c07908ec2e}
+      \strng{fullhash}{8ff2a7374a2c7f04b31824c07908ec2e}
+      \strng{bibnamehash}{8ff2a7374a2c7f04b31824c07908ec2e}
+      \strng{authorbibnamehash}{8ff2a7374a2c7f04b31824c07908ec2e}
+      \strng{authornamehash}{8ff2a7374a2c7f04b31824c07908ec2e}
+      \strng{authorfullhash}{8ff2a7374a2c7f04b31824c07908ec2e}
+      \field{sortinit}{M}
+      \field{sortinithash}{4625c616857f13d17ce56f7d4f97d451}
+      \field{labeldatesource}{nodate}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{Reporte académico de investigación}
+      \field{title}{Algoritmo híbrido de recomendación adaptativa basado en perfiles de usuario}
+    \endentry
+    \entry{revision_sr_turismo}{unpublished}{}
+      \name{author}{4}{}{%
+        {{un=0,uniquepart=base,hash=679256a772eba0f53676e496122374db}{%
+           family={Pérez-Almaguer},
+           familyi={P\bibinithyphendelim A\bibinitperiod},
+           given={Yilena},
+           giveni={Y\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=462d4045219118251e152627e6316d1c}{%
+           family={Martín-Dueñas},
+           familyi={M\bibinithyphendelim D\bibinitperiod},
+           given={Neober},
+           giveni={N\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=e103ffc0d705bef412a3c349334c8bbb}{%
+           family={Carballo-Cruz},
+           familyi={C\bibinithyphendelim C\bibinitperiod},
+           given={Edianny},
+           giveni={E\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=1a1df5ce22f8707eb3ce18e77427b3d8}{%
+           family={Yera},
+           familyi={Y\bibinitperiod},
+           given={Raciel},
+           giveni={R\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{6deae7d2431229f2bc0d6fef22a09cd9}
+      \strng{fullhash}{b1307a8645ee4d20828efc068cb18325}
+      \strng{bibnamehash}{6deae7d2431229f2bc0d6fef22a09cd9}
+      \strng{authorbibnamehash}{6deae7d2431229f2bc0d6fef22a09cd9}
+      \strng{authornamehash}{6deae7d2431229f2bc0d6fef22a09cd9}
+      \strng{authorfullhash}{b1307a8645ee4d20828efc068cb18325}
+      \field{sortinit}{P}
+      \field{sortinithash}{ff3bcf24f47321b42cb156c2cc8a8422}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{SciELO Preprints. DOI: 10.1590/SciELOPreprints.1677}
+      \field{title}{Una revisión de los sistemas recomendadores grupales como herramienta innovadora en el área del turismo}
+      \field{year}{2021}
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

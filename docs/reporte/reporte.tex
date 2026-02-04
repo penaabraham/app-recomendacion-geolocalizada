@@ -1,0 +1,241 @@
+% !TeX spellcheck = es_US-SpanishUnitedStates
+\documentclass[11pt, letterpaper]{article}
+
+% --- Idioma y formato ---
+\usepackage[spanish, es-tabla]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{csquotes}
+\usepackage[margin=1in]{geometry}
+
+% --- Matemáticas y gráficos ---
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{amsmath, amssymb}
+\usepackage{float}
+
+% --- Código fuente ---
+\usepackage{listings}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+\definecolor{lightgray}{rgb}{0.97,0.97,0.97}
+
+\lstset{
+	backgroundcolor=\color{lightgray},
+	basicstyle=\ttfamily\small,
+	keywordstyle=\color{blue},
+	commentstyle=\color{gray},
+	stringstyle=\color{mauve},
+	breaklines=true,
+	frame=single,
+	numbers=left,
+	numberstyle=\tiny\color{gray},
+	captionpos=b
+}
+
+% --- Encabezados ---
+\usepackage{fancyhdr}
+\setlength{\headheight}{14pt}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Sistema de Recomendación Híbrido}
+\fancyfoot[C]{\thepage}
+
+% --- Bibliografía APA 7 ---
+\usepackage[style=authoryear, backend=biber]{biblatex}
+\addbibresource{reporte.bib}
+
+% --- Rutas de imágenes ---
+\graphicspath{{./figuras/}{./c4/}}
+
+\begin{document}
+	
+	% ======================================================
+	% PORTADA
+	% ======================================================
+	\begin{titlepage}
+		\centering
+		\vspace*{2cm}
+		
+		{\Huge \textbf{Sistema de Recomendación Híbrido para Productos y Servicios en Aplicaciones Móviles}} \\[0.5cm]
+		{\Large Proyecto de Investigación Aplicada / Servicio Social} \\[2cm]
+		
+		\textbf{Autor:}\\
+		Abraham \\[0.5cm]
+		
+		\textbf{Institución:}\\
+		Nombre de la institución \\[0.5cm]
+		
+		\textbf{Asignatura / Programa:}\\
+		Servicio Social \\[1cm]
+		
+		\textbf{Fecha:}\\
+		\today \\[2cm]
+		
+		\begin{abstract}
+			Este documento presenta el diseño e implementación de una aplicación móvil que integra un algoritmo híbrido de recomendación para productos y servicios. El sistema combina técnicas de filtrado colaborativo y basado en contenido con información contextual para mejorar la precisión de las recomendaciones. Se describe la arquitectura, la metodología empleada y los resultados preliminares obtenidos.
+		\end{abstract}
+		
+		\vfill
+		Ingeniería de Software
+	\end{titlepage}
+	
+	% ======================================================
+	% ÍNDICES
+	% ======================================================
+	\tableofcontents
+	\listoftables
+	\listoffigures
+	\newpage
+	
+	% ======================================================
+	% RESUMEN / ABSTRACT
+	% ======================================================
+	\section*{Resumen}
+	\addcontentsline{toc}{section}{Resumen}
+	
+	Texto del resumen en español.
+	
+	\section*{Abstract}
+	\addcontentsline{toc}{section}{Abstract}
+	
+	Text of the abstract in English.
+	
+	% ======================================================
+	\newpage
+	\section{Introducción}
+	
+	Contexto de los sistemas de recomendación, uso en aplicaciones móviles y motivación del proyecto.
+	
+	% ======================================================
+	\section{Justificación}
+	
+	Relevancia académica, tecnológica y social del proyecto.
+	
+	% ======================================================
+	\section{Objetivos}
+	
+	\subsection{Objetivo general}
+	Desarrollar e implementar un sistema de recomendación híbrido integrado en una aplicación móvil para la personalización de productos y servicios.
+	
+	\subsection{Objetivos específicos}
+	
+	\begin{itemize}
+		\item Analizar técnicas existentes de recomendación.
+		\item Diseñar el modelo híbrido.
+		\item Implementar el algoritmo.
+		\item Evaluar su desempeño.
+		\item Integrarlo en una aplicación móvil funcional.
+	\end{itemize}
+	
+	% ======================================================
+	\section{Marco Teórico}
+	
+	\subsection{Sistemas de recomendación}
+	Los sistemas de recomendación constituyen un área de investigación y desarrollo ampliamente estudiada dentro de la Inteligencia Artificial y los Sistemas de Información, cuyo objetivo principal es asistir a los usuarios en la toma de decisiones mediante la sugerencia personalizada de productos, servicios o contenidos. Estos sistemas buscan reducir la sobrecarga de información y mejorar la experiencia del usuario a partir del análisis de datos históricos y contextuales (\cite{revision_sr_turismo}).
+	
+	De manera general, un sistema de recomendación se apoya en la identificación de patrones de comportamiento del usuario, los cuales pueden derivarse de interacciones explícitas, como calificaciones, o implícitas, como registros de navegación, compras o visitas a ubicaciones específicas (\cite{rodas_sr_colaborativo}). Este enfoque ha demostrado ser efectivo en múltiples dominios, incluyendo comercio electrónico, educación y turismo.
+	
+	\subsection{Filtrado colaborativo}
+	El filtrado colaborativo es una de las técnicas más representativas dentro de los sistemas de recomendación. Su principio fundamental consiste en asumir que usuarios con comportamientos similares en el pasado tenderán a mostrar preferencias semejantes en el futuro. Bajo este enfoque, las recomendaciones se generan a partir del análisis de interacciones entre usuarios y elementos, sin necesidad de describir explícitamente las características de los productos (\cite{rodas_sr_colaborativo}).
+	
+	Diversos estudios han evidenciado que el filtrado colaborativo basado en usuarios ofrece resultados adecuados cuando existe suficiente información histórica, especialmente en contextos donde las preferencias pueden inferirse a partir de patrones de uso compartidos (\cite{dael_recomendacion_hibrida}). No obstante, este enfoque presenta limitaciones conocidas, como el problema de arranque en frío y la escasez de datos.
+	
+	\subsection{Sistemas de recomendación híbridos}
+	Con el objetivo de mitigar las limitaciones inherentes a los enfoques individuales, surgen los sistemas de recomendación híbridos, los cuales combinan múltiples técnicas dentro de un mismo modelo. Esta integración permite aprovechar las fortalezas de cada método y mejorar la calidad global de las recomendaciones (\cite{revision_sr_turismo}).
+	
+	En particular, los sistemas híbridos que integran filtrado colaborativo con técnicas adicionales, como análisis de contenido, clustering o información contextual, han mostrado un desempeño superior frente a enfoques tradicionales. El algoritmo propuesto por Martínez Simón constituye un ejemplo de este tipo de aproximaciones, al integrar diferentes fuentes de información para generar recomendaciones más precisas (\cite{dael_recomendacion_hibrida}).
+	
+	\subsection{Agrupamiento y técnicas de clustering}
+	El clustering o agrupamiento es una técnica de aprendizaje no supervisado que permite organizar datos en grupos homogéneos a partir de criterios de similitud. Dentro del contexto de los sistemas de recomendación, el clustering facilita la segmentación de usuarios o elementos, reduciendo la complejidad computacional y mejorando la eficiencia del proceso de recomendación (\cite{clusterdoc_agrupamiento}).
+	
+	Herramientas como K-Means han sido ampliamente utilizadas para identificar patrones latentes en conjuntos de datos y apoyar procesos de recuperación y recomendación de información. La utilización de técnicas de agrupamiento resulta especialmente útil cuando se busca integrar información adicional, como el contexto geográfico, dentro del modelo de recomendación (\cite{clusterdoc_agrupamiento}).
+	
+	\subsection{Recomendación basada en geolocalización}
+	La incorporación de información geográfica en los sistemas de recomendación ha cobrado relevancia con el auge de los dispositivos móviles y los servicios basados en localización. En este tipo de sistemas, la ubicación del usuario se convierte en un factor determinante para mejorar la pertinencia de las recomendaciones, especialmente en escenarios donde la proximidad física influye directamente en la decisión de consumo (\cite{revision_sr_turismo}).
+	
+	Diversos trabajos aplicados han demostrado que la utilización de la localización permite ofrecer recomendaciones más contextualizadas y útiles, al reducir el espacio de búsqueda y priorizar elementos cercanos al usuario. Este enfoque ha sido utilizado en entornos comerciales y de servicios, donde la dimensión espacial forma parte inherente del proceso de recomendación (\cite{supermercado_recomendacion_localizacion}).
+	
+	\subsection{Aplicaciones prácticas de los sistemas de recomendación}
+	
+	La aplicación de sistemas de recomendación en entornos reales ha permitido validar su utilidad más allá del ámbito teórico. Proyectos como el desarrollado por Calderón Pacheco y Vega Asto evidencian cómo la integración de patrones de comportamiento y localización puede mejorar la experiencia del usuario en contextos comerciales físicos, como supermercados (\cite{supermercado_recomendacion_localizacion}).
+	
+	Estos trabajos refuerzan la idea de que el valor de un sistema de recomendación no radica únicamente en la novedad del algoritmo empleado, sino en su correcta adaptación, integración y validación dentro de un sistema funcional. Bajo esta perspectiva, el presente proyecto se enmarca como una aplicación práctica de un algoritmo híbrido existente, adaptado a un entorno móvil con geolocalización en tiempo real.
+	
+	
+	% ======================================================
+	\section{Metodología}
+	
+	\subsection{Tipo de investigación}
+	Investigación aplicada con enfoque experimental.
+	
+	\subsection{Arquitectura del sistema}
+	Descripción cliente-servidor.
+	
+	\subsection{Descripción del algoritmo híbrido}
+	Modelo matemático y lógica de combinación.
+	
+	\subsection{Tecnologías utilizadas}
+	FastAPI, Flutter, base de datos, etc.
+	
+	\subsection{Conjunto de datos}
+	Origen y características.
+	
+	\subsection{Métricas de evaluación}
+	
+	% ======================================================
+	\section{Arquitectura del Sistema}
+	
+	Modelo C4.
+	
+	\begin{figure}[H]
+		\centering
+		%\includegraphics[width=0.8\textwidth]{DiagramaContenedores-dark.png}
+		\caption{Diagrama de contenedores del sistema.}
+		\label{fig:c4}
+	\end{figure}
+	
+	% ======================================================
+	\section{Implementación}
+	
+	\subsection{Backend}
+	
+	\begin{lstlisting}[language=Python, caption=Endpoint de recomendación]
+		@app.get("/recomendar/{user_id}")
+		def recomendar(user_id: int):
+		return modelo.recommend(user_id)
+	\end{lstlisting}
+	
+	\subsection{Frontend}
+	
+	Descripción de la app móvil.
+	
+	% ======================================================
+	\section{Resultados}
+	
+	Tablas, métricas, análisis cuantitativo.
+	
+	% ======================================================
+	\section{Discusión}
+	
+	Interpretación de resultados y comparación con trabajos previos.
+	
+	% ======================================================
+	\section{Conclusiones}
+	
+	Síntesis de aportes y cumplimiento de objetivos.
+	
+	% ======================================================
+	\section{Trabajo Futuro}
+	
+	Mejoras posibles.
+	
+	% ======================================================
+	\printbibliography
+	
+	% ======================================================
+	\appendix
+	\section{Anexos}
+	
+	Diagramas, capturas, código adicional.
+	
+\end{document}
