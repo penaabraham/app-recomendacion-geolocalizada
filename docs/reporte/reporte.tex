@@ -45,7 +45,11 @@
 \addbibresource{reporte.bib}
 
 % --- Rutas de imágenes ---
-\graphicspath{{./figuras/}{./c4/}}
+\graphicspath{{../c4/container/}{../c4/context/}}
+
+% --- Imágenes Landscape ---
+\usepackage{pdflscape}
+
 
 \begin{document}
 	
@@ -189,9 +193,16 @@
 	
 	\begin{figure}[H]
 		\centering
-		%\includegraphics[width=0.8\textwidth]{DiagramaContenedores-dark.png}
+		\includegraphics[width=\textwidth]{DiagramaContenedores-dark.png}
 		\caption{Diagrama de contenedores del sistema.}
-		\label{fig:c4}
+		\label{fig:Contenedores}
+	\end{figure}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=\textwidth]{DiagramaContexto-dark.png}
+		\caption{Diagrama de contexto del sistema.}
+		\label{fig:Contexto}
 	\end{figure}
 	
 	% ======================================================

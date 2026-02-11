@@ -10,3 +10,18 @@ __pycache__/
 build/
 ios/.generated/
 android/**/*.iml
+
+# Archivos generados por LaTeX
+*.aux
+*.log
+*.toc
+*.lof
+*.lot
+*.bcf
+*.blg
+*.run.xml
+*.synctex.gz
+*.out
+
+# PDF compilado (opcional si no quieres subirlo)
+*.pdf
