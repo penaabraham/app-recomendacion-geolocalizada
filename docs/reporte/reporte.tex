@@ -113,23 +113,33 @@
 	% ======================================================
 	\section{Justificación}
 	
-	Relevancia académica, tecnológica y social del proyecto.
+	El crecimiento exponencial de la información digital y la masificación de dispositivos móviles con capacidades de geolocalización han transformado la manera en que los usuarios interactúan con productos y servicios. En este contexto, los sistemas de recomendación han adquirido un papel fundamental al facilitar la toma de decisiones en entornos con alta sobrecarga informativa (\cite{revision_sr_turismo}).
 	
-	% ======================================================
-	\section{Objetivos}
+	Si bien existen múltiples propuestas algorítmicas en la literatura, muchas de ellas se mantienen en un nivel conceptual o experimental, sin integrarse completamente en sistemas funcionales que operen con datos en tiempo real y condiciones técnicas reales. En particular, la incorporación de geolocalización dinámica dentro de sistemas híbridos de recomendación representa un desafío de integración arquitectónica, procesamiento y validación técnica.
+	
+	El algoritmo híbrido propuesto por Martínez Simón (\cite{dael_recomendacion_hibrida}) constituye una base sólida desde el punto de vista metodológico; sin embargo, su implementación en un entorno con geolocalización activa y arquitectura cliente-servidor requiere procesos de adaptación, integración y validación que no han sido documentados extensamente.
+	
+	En consecuencia, el presente proyecto se justifica como una aplicación práctica y validación técnica de un algoritmo híbrido existente, integrándolo dentro de un sistema funcional que incorpora información geográfica en tiempo real, permitiendo evaluar su comportamiento en un entorno operativo.
+	
+	\section{Objetivo}
 	
 	\subsection{Objetivo general}
-	Desarrollar e implementar un sistema de recomendación híbrido integrado en una aplicación móvil para la personalización de productos y servicios.
+	Desarrollar e integrar un sistema de recomendación híbrido basado en el algoritmo propuesto por Martínez Simón, incorporando geolocalización en tiempo real dentro de una arquitectura cliente-servidor, con el fin de validar técnicamente su funcionamiento en un entorno operativo.
 	
 	\subsection{Objetivos específicos}
 	
 	\begin{itemize}
-		\item Analizar técnicas existentes de recomendación.
-		\item Diseñar el modelo híbrido.
-		\item Implementar el algoritmo.
-		\item Evaluar su desempeño.
-		\item Integrarlo en una aplicación móvil funcional.
+		\item Analizar el algoritmo híbrido propuesto en la literatura para identificar sus componentes funcionales y requerimientos de implementación.
+		
+		\item Diseñar una arquitectura de software que permita la integración del algoritmo dentro de un sistema distribuido con backend y aplicación móvil.
+		
+		\item Incorporar el procesamiento de coordenadas geográficas en tiempo real como variable contextual dentro del proceso de recomendación.
+		
+		\item Implementar los módulos necesarios para la obtención, procesamiento y almacenamiento de datos de usuarios y productos.
+		
+		\item Validar el funcionamiento del sistema mediante pruebas técnicas que permitan evaluar la coherencia y estabilidad de las recomendaciones generadas.
 	\end{itemize}
+	
 	
 	% ======================================================
 	\section{Marco Teórico}
