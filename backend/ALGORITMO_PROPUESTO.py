@@ -142,8 +142,8 @@ def add_distance(user_id, lat_usuario=None, lon_usuario=None):
 
 
 # Asignar distancias iniciales
-for user_id in locations['user_id']:
-    add_distance(user_id)
+# for user_id in locations['user_id']:
+#     add_distance(user_id)
 
 
 # ==========================================
