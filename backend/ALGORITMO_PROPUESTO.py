@@ -13,39 +13,11 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 # Cargar Datos
 # Datos de calificaciones (simulando varios usuarios calificando diferentes productos)
-ratings = pd.DataFrame({
-    'user_id': [1, 2, 3, 4, 5],
-    'item_id': [101, 102, 103, 104, 105],
-    'rating': [5, 4, 3, 5, 4],
-    'timestamp': [1622476800, 1622563200, 1622649600, 1622736000, 1622822400]
-})
-
-# Datos de comentarios
-comments = pd.DataFrame({
-    'item_id': [101, 102, 103, 104, 105],
-    'comment': [
-        "Excelente YAOS - Electrónica y Papelería, muy recomendable", 
-        "Samsung Galaxy S21, buena compra",
-        "Google Pixel 5, buena relación calidad-precio",
-        "Refrigerador LG, muy eficiente",
-        "Refrigerador Samsung, satisface mis necesidades"
-    ]
-})
-
-# Datos de ubicaciones (GPS) de los usuarios
-locations = pd.DataFrame({
-    'user_id': [1, 2, 3, 4, 5],
-    'latitude': [34.0522, 36.1699, 40.7128, 41.8781, 34.0622],  # Los Ángeles, Las Vegas, Nueva York, Chicago, Cerca de Los Ángeles
-    'longitude': [-118.2437, -115.1398, -74.0060, -87.6298, -118.2537]
-})
-
-# Datos de productos con ubicaciones en diferentes ciudades (ligeramente diferentes)
-products = pd.DataFrame({
-    'item_id': [101, 102, 103, 104, 105],
-    'name': ["YAOS - Electrónica y Papelería", "Samsung Galaxy S21", "Google Pixel 5", "Refrigerador LG", "Refrigerador Samsung"],
-    'latitude': [19.9782, 36.1600, 40.7100, 41.8800, 34.0630],  # Coordenadas ajustadas para evitar coincidencias exactas
-    'longitude': [-98.6852, -115.1500, -74.0070, -87.6300, -118.2500]
-})
+users = pd.read_json("data/users.json")
+locations = pd.read_json("data/locations.json")
+products = pd.read_json("data/products.json")
+ratings = pd.read_json("data/ratings.json")
+comments = pd.read_json("data/comments.json")
 
 # Preprocesamiento de Datos
 
