@@ -245,68 +245,70 @@ def normalize_rating(ratings):
 
 def recommend(user_id, lat_manual=None, lon_manual=None, top_n=5):
 
-    # Actualizar distancias según ubicación del usuario
     u_lat, u_lon = add_distance(user_id, lat_manual, lon_manual)
 
     rec = products.copy()
 
-    # Agregar rating promedio
     rec = rec.merge(rating_avg, on="item_id", how="left")
-
     rec["avg_rating"].fillna(0, inplace=True)
 
-    # Score geográfico (distancia normalizada)
     rec["geo_score"] = normalize_distance(rec["distance"])
-
-    # Score de rating
     rec["rating_score"] = normalize_rating(rec["avg_rating"])
 
-    # Score de contenido basado en similitud promedio
     content_scores = []
 
     for item in rec["item_id"]:
-
         if item in similarity_df.columns:
-
             score = similarity_df[item].mean()
-
         else:
-
             score = 0
-
         content_scores.append(score)
 
     rec["content_score"] = content_scores
 
-    # Score final híbrido
     rec["final_score"] = (
-
         0.5 * rec["geo_score"] +
         0.3 * rec["rating_score"] +
         0.2 * rec["content_score"]
-
     )
 
-    # Ordenar resultados
+    rec["reason"] = rec.apply(generate_reason, axis=1)
+
     rec = rec.sort_values("final_score", ascending=False)
 
-    rec["distance"] = rec["distance"].apply(
-        lambda x: f"{x:.2f} km"
-    )
+    rec["distance"] = rec["distance"].apply(lambda x: f"{x:.2f} km")
 
     return rec[
-        ["name", "distance", "avg_rating", "final_score"]
+        ["name", "distance", "avg_rating", "reason"]
     ].head(top_n)
+
+def generate_reason(row):
+
+    reasons = []
+
+    if row["geo_score"] > 0.7:
+        reasons.append("Cerca de tu ubicación")
+
+    if row["rating_score"] > 0.6:
+        reasons.append("Muy bien calificado por usuarios")
+
+    if row["content_score"] > 0.5:
+        reasons.append("Similar a productos populares")
+
+    if len(reasons) == 0:
+        reasons.append("Recomendado por el sistema")
+
+    return reasons
 
 
 # ==========================================
 # PRUEBA DEL SISTEMA
 # ==========================================
 
-for user_id in locations['user_id']:
+# for user_id in locations['user_id']:
 
-    print(f"Recomendaciones para Usuario {user_id}:")
+#     print(f"Recomendaciones para Usuario {user_id}:")
 
-    print(recommend(user_id))
+#     print(recommend(user_id))
 
-    print("\n")
+#     print("\n")

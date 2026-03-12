@@ -99,7 +99,25 @@ class _RecsPageState extends State<RecsPage> {
                             child: ListTile(
                               leading: const Icon(Icons.place, color: Colors.redAccent),
                               title: Text(item['name'], style: const TextStyle(fontWeight: FontWeight.bold)),
-                              subtitle: Text("Distancia calculada: ${item['distance']}"),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text("Distancia: ${item['distance']}"),
+                                  const SizedBox(height: 4),
+
+                                  if (item['reason'] != null)
+                                    ...List.generate(
+                                      item['reason'].length,
+                                      (i) => Row(
+                                        children: [
+                                          const Icon(Icons.check_circle, size: 14, color: Colors.green),
+                                          const SizedBox(width: 4),
+                                          Text(item['reason'][i]),
+                                        ],
+                                      ),
+                                    ),
+                                ],
+                              ),
                             ),
                           );
                         },
