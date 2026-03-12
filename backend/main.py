@@ -15,7 +15,11 @@ def obtener_recomendacion(
     mi_longitud = lon if lon is not None else -99.1332
 
     # 3. Llamamos a la función de tu algoritmo (3 parámetros)
-    resultado = algoritmo.recommend(user_id, mi_latitud, mi_longitud)
+    resultado = algoritmo.recommend(
+        user_id=user_id, 
+        lat_manual=lat, 
+        lon_manual=lon,
+        )
     
     # 4. Convertimos a diccionario (records) para que Flutter lo entienda
     return resultado.to_dict(orient='records')
