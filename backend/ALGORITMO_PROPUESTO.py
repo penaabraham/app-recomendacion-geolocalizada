@@ -249,8 +249,9 @@ def recommend(user_id, lat_manual=None, lon_manual=None, top_n=5):
 
     rec = products.copy()
 
+    rating_avg = rating_avg.drop_duplicates(subset=['item_id'])
     rec = rec.merge(rating_avg, on="item_id", how="left")
-    rec["avg_rating"].fillna(0, inplace=True)
+    rec["avg_rating"] = rec["avg_rating"].fillna(0)
 
     rec["geo_score"] = normalize_distance(rec["distance"])
     rec["rating_score"] = normalize_rating(rec["avg_rating"])
@@ -282,24 +283,28 @@ def recommend(user_id, lat_manual=None, lon_manual=None, top_n=5):
         ["name", "distance", "avg_rating", "reason"]
     ].head(top_n)
 
+
 def generate_reason(row):
-
     reasons = []
+    
+    # Extraemos los valores asegurando que sean flotantes simples
+    geo = float(row["geo_score"])
+    rat = float(row["rating_score"])
+    cont = float(row["content_score"])
 
-    if row["geo_score"] > 0.7:
+    if geo > 0.7:
         reasons.append("Cerca de tu ubicación")
 
-    if row["rating_score"] > 0.6:
+    if rat > 0.6:
         reasons.append("Muy bien calificado por usuarios")
 
-    if row["content_score"] > 0.5:
+    if cont > 0.5:
         reasons.append("Similar a productos populares")
 
     if len(reasons) == 0:
         reasons.append("Recomendado por el sistema")
 
     return reasons
-
 
 # ==========================================
 # PRUEBA DEL SISTEMA
