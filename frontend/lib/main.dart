@@ -62,6 +62,11 @@ class _RecsPageState extends State<RecsPage> {
           isLoading = false;
           statusMessage = "Cerca de ti:";
         });
+      } else {
+        setState(() {
+          isLoading = false;
+          statusMessage = "Error servidor: ${response.statusCode}";
+        });
       }
     } catch (e) {
       setState(() {
