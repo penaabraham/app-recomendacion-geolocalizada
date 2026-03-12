@@ -1,159 +1,312 @@
-# Importación de Bibliotecas
+# ==========================================
+# IMPORTACIÓN DE BIBLIOTECAS
+# ==========================================
+
 import pandas as pd
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.cluster import KMeans
 from sklearn.decomposition import LatentDirichletAllocation as LDA
+
 import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Embedding, Flatten
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 
-# Cargar Datos
-# Datos de calificaciones (simulando varios usuarios calificando diferentes productos)
-ratings = pd.DataFrame({
-    'user_id': [1, 2, 3, 4, 5],
-    'item_id': [101, 102, 103, 104, 105],
-    'rating': [5, 4, 3, 5, 4],
-    'timestamp': [1622476800, 1622563200, 1622649600, 1622736000, 1622822400]
-})
 
-# Datos de comentarios
-comments = pd.DataFrame({
-    'item_id': [101, 102, 103, 104, 105],
-    'comment': [
-        "Excelente YAOS - Electrónica y Papelería, muy recomendable", 
-        "Samsung Galaxy S21, buena compra",
-        "Google Pixel 5, buena relación calidad-precio",
-        "Refrigerador LG, muy eficiente",
-        "Refrigerador Samsung, satisface mis necesidades"
-    ]
-})
+# ==========================================
+# CARGA DE DATOS
+# ==========================================
 
-# Datos de ubicaciones (GPS) de los usuarios
-locations = pd.DataFrame({
-    'user_id': [1, 2, 3, 4, 5],
-    'latitude': [34.0522, 36.1699, 40.7128, 41.8781, 34.0622],  # Los Ángeles, Las Vegas, Nueva York, Chicago, Cerca de Los Ángeles
-    'longitude': [-118.2437, -115.1398, -74.0060, -87.6298, -118.2537]
-})
+users = pd.read_json("data/users.json")
+locations = pd.read_json("data/locations.json")
+products = pd.read_json("data/products.json")
+ratings = pd.read_json("data/ratings.json")
+comments = pd.read_json("data/comments.json")
 
-# Datos de productos con ubicaciones en diferentes ciudades (ligeramente diferentes)
-products = pd.DataFrame({
-    'item_id': [101, 102, 103, 104, 105],
-    'name': ["YAOS - Electrónica y Papelería", "Samsung Galaxy S21", "Google Pixel 5", "Refrigerador LG", "Refrigerador Samsung"],
-    'latitude': [19.9782, 36.1600, 40.7100, 41.8800, 34.0630],  # Coordenadas ajustadas para evitar coincidencias exactas
-    'longitude': [-98.6852, -115.1500, -74.0070, -87.6300, -118.2500]
-})
 
-# Preprocesamiento de Datos
+# ==========================================
+# PREPROCESAMIENTO DE DATOS
+# ==========================================
 
-# Filtro Basado en Contenido
-# Vectorizar comentarios
+# ------------------------------------------------
+# FILTRADO BASADO EN CONTENIDO
+# ------------------------------------------------
+
+# Vectorización de comentarios usando TF-IDF
 tfidf = TfidfVectorizer(stop_words='english')
 tfidf_matrix = tfidf.fit_transform(comments['comment'])
 
 # Similitud coseno entre productos basados en comentarios
 cosine_sim = cosine_similarity(tfidf_matrix, tfidf_matrix)
 
-# Modelado de Tópicos con LDA
+# Crear DataFrame de similitud usando item_id como índice
+item_ids = comments["item_id"].tolist()
+similarity_df = pd.DataFrame(cosine_sim, index=item_ids, columns=item_ids)
+
+
+# ------------------------------------------------
+# MODELADO DE TÓPICOS (LDA)
+# ------------------------------------------------
+
 lda = LDA(n_components=5, random_state=42)
 lda_matrix = lda.fit_transform(tfidf_matrix)
 
-# Filtro Colaborativo
-# Crear matriz de calificaciones
-rating_matrix = ratings.pivot_table(index='user_id', columns='item_id', values='rating').fillna(0)
 
-# Similitud coseno entre usuarios
+# ------------------------------------------------
+# FILTRADO COLABORATIVO
+# ------------------------------------------------
+
+# Crear matriz usuario-producto
+rating_matrix = ratings.pivot_table(
+    index='user_id',
+    columns='item_id',
+    values='rating'
+).fillna(0)
+
+# Similitud entre usuarios
 user_sim = cosine_similarity(rating_matrix, rating_matrix)
 
-# Geolocalización
-# Calcular distancias geográficas (usando la fórmula de Haversine)
+
+# ------------------------------------------------
+# CÁLCULO DE RATING PROMEDIO POR PRODUCTO
+# ------------------------------------------------
+
+rating_avg = ratings.groupby("item_id")["rating"].mean().reset_index()
+rating_avg.rename(columns={"rating": "avg_rating"}, inplace=True)
+
+
+# ==========================================
+# GEOLOCALIZACIÓN
+# ==========================================
+
+# Cálculo de distancia geográfica usando fórmula de Haversine
+
 def haversine(lat1, lon1, lat2, lon2):
+
     R = 6371  # Radio de la Tierra en km
+
     dlat = np.radians(lat2 - lat1)
     dlon = np.radians(lon2 - lon1)
-    a = np.sin(dlat/2) * np.sin(dlat/2) + np.cos(np.radians(lat1)) * np.cos(np.radians(lat2)) * np.sin(dlon/2) * np.sin(dlon/2)
+
+    a = (
+        np.sin(dlat/2) * np.sin(dlat/2)
+        + np.cos(np.radians(lat1))
+        * np.cos(np.radians(lat2))
+        * np.sin(dlon/2)
+        * np.sin(dlon/2)
+    )
+
     c = 2 * np.arctan2(np.sqrt(a), np.sqrt(1-a))
     d = R * c
+
     return d
 
-# Añadir distancia a los productos
-# --- MODIFICACIÓN EN LA FUNCIÓN DE DISTANCIA ---
-def add_distance(user_id, lat_usuario=None, lon_usuario=None):
-    # Si el celular manda coordenadas (lat/lon), las usamos.
-    # Si no, buscamos en el DataFrame 'locations' como antes.
-    if lat_usuario is not None and lon_usuario is not None:
-        u_lat, u_lon = lat_usuario, lon_usuario
-    else:
-        user_loc = locations[locations['user_id'] == user_id]
-        u_lat, u_lon = user_loc['latitude'].values[0], user_loc['longitude'].values[0]
-    
-    distances = []
-    for index, product in products.iterrows():
-        dist = haversine(u_lat, u_lon, product['latitude'], product['longitude'])
-        distances.append(dist)
-    products['distance'] = distances
-    return u_lat, u_lon # Devolvemos las coordenadas usadas
 
-# Asignar la distancia para todos los usuarios antes de la recomendación
+# ------------------------------------------------
+# FUNCIÓN PARA AGREGAR DISTANCIAS A PRODUCTOS
+# ------------------------------------------------
+
+def add_distance(user_id, lat_usuario=None, lon_usuario=None):
+
+    # Si el celular manda coordenadas, se usan directamente
+    if lat_usuario is not None and lon_usuario is not None:
+
+        u_lat, u_lon = lat_usuario, lon_usuario
+
+    else:
+
+        user_loc = locations[locations['user_id'] == user_id]
+
+        u_lat = user_loc['latitude'].values[0]
+        u_lon = user_loc['longitude'].values[0]
+
+    distances = []
+
+    for _, product in products.iterrows():
+
+        dist = haversine(
+            u_lat,
+            u_lon,
+            product['latitude'],
+            product['longitude']
+        )
+
+        distances.append(dist)
+
+    products['distance'] = distances
+
+    return u_lat, u_lon
+
+
+# Asignar distancias iniciales
 for user_id in locations['user_id']:
     add_distance(user_id)
 
-# Clustering de Ubicaciones
+
+# ==========================================
+# CLUSTERING DE UBICACIONES
+# ==========================================
+
 kmeans = KMeans(n_clusters=3, random_state=42)
-locations['cluster'] = kmeans.fit_predict(locations[['latitude', 'longitude']])
 
-# Asignar clusters a productos (necesario para filtrar por cluster en las recomendaciones)
-products['cluster'] = kmeans.predict(products[['latitude', 'longitude']])
+locations['cluster'] = kmeans.fit_predict(
+    locations[['latitude', 'longitude']]
+)
 
-# Implementación de un Modelo de Aprendizaje Profundo
+products['cluster'] = kmeans.predict(
+    products[['latitude', 'longitude']]
+)
+
+
+# ==========================================
+# MODELO DE APRENDIZAJE PROFUNDO (NLP)
+# ==========================================
 
 # Tokenización de comentarios
+
 tokenizer = Tokenizer()
 tokenizer.fit_on_texts(comments['comment'])
+
 sequences = tokenizer.texts_to_sequences(comments['comment'])
 word_index = tokenizer.word_index
+
 data = pad_sequences(sequences, maxlen=100)
 
+
 # Crear modelo de embeddings
+
 model = Sequential()
-model.add(Embedding(input_dim=len(word_index) + 1, output_dim=128, input_length=100))
+
+model.add(
+    Embedding(
+        input_dim=len(word_index) + 1,
+        output_dim=128,
+        input_length=100
+    )
+)
+
 model.add(Flatten())
+
 model.add(Dense(1, activation='sigmoid'))
-model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
-# Entrenamiento del Modelo
-labels = np.array([1 if rating > 3 else 0 for rating in ratings['rating'].values])  # Simplificar a clasificación binaria
-model.fit(data, labels, epochs=10, batch_size=32, validation_split=0.2)
+model.compile(
+    optimizer='adam',
+    loss='binary_crossentropy',
+    metrics=['accuracy']
+)
 
-# Generación de Recomendaciones
 
-# --- MODIFICACIÓN EN LA FUNCIÓN RECOMMEND ---
-def recommend(user_id, lat_manual=None, lon_manual=None):
-    # 1. Actualizar distancias con la ubicación real del celular
+# Crear etiquetas binarias (rating > 3 = positivo)
+
+labels = np.array([
+    1 if r > 3 else 0
+    for r in ratings['rating'].head(len(data))
+])
+
+
+# Entrenar modelo
+
+model.fit(
+    data,
+    labels,
+    epochs=10,
+    batch_size=32,
+    validation_split=0.2
+)
+
+
+# ==========================================
+# FUNCIONES DE NORMALIZACIÓN
+# ==========================================
+
+def normalize_distance(distances):
+
+    max_d = distances.max()
+    min_d = distances.min()
+
+    return 1 - ((distances - min_d) / (max_d - min_d + 1e-6))
+
+
+def normalize_rating(ratings):
+
+    return (
+        (ratings - ratings.min())
+        /
+        (ratings.max() - ratings.min() + 1e-6)
+    )
+
+
+# ==========================================
+# SISTEMA DE RECOMENDACIÓN HÍBRIDO
+# ==========================================
+
+def recommend(user_id, lat_manual=None, lon_manual=None, top_n=5):
+
+    # Actualizar distancias según ubicación del usuario
     u_lat, u_lon = add_distance(user_id, lat_manual, lon_manual)
-    
-    # 2. Determinar a qué cluster pertenece la ubicación actual del celular
-    # El modelo KMeans predice el cluster para la posición recibida
-    user_cluster = kmeans.predict([[u_lat, u_lon]])[0]
-    
-    # 3. Filtrar productos por el cluster detectado
-    cluster_products = products[products['cluster'] == user_cluster].copy()
 
-    # 4. Si el cluster está vacío (porque estás muy lejos), mostrar los más cercanos globales
-    if cluster_products.empty:
-        recommendations = products.sort_values('distance').head(5).copy()
-    else:
-        recommendations = cluster_products.sort_values('distance').head(5).copy()
-    
-    # 5. Formatear salida
-    recommendations['distance'] = recommendations['distance'].apply(lambda x: f"{x:.2f} km")
-    
-    return recommendations[['name', 'distance']]
+    rec = products.copy()
 
-# Obtener recomendaciones para cada usuario
+    # Agregar rating promedio
+    rec = rec.merge(rating_avg, on="item_id", how="left")
+
+    rec["avg_rating"].fillna(0, inplace=True)
+
+    # Score geográfico (distancia normalizada)
+    rec["geo_score"] = normalize_distance(rec["distance"])
+
+    # Score de rating
+    rec["rating_score"] = normalize_rating(rec["avg_rating"])
+
+    # Score de contenido basado en similitud promedio
+    content_scores = []
+
+    for item in rec["item_id"]:
+
+        if item in similarity_df.columns:
+
+            score = similarity_df[item].mean()
+
+        else:
+
+            score = 0
+
+        content_scores.append(score)
+
+    rec["content_score"] = content_scores
+
+    # Score final híbrido
+    rec["final_score"] = (
+
+        0.5 * rec["geo_score"] +
+        0.3 * rec["rating_score"] +
+        0.2 * rec["content_score"]
+
+    )
+
+    # Ordenar resultados
+    rec = rec.sort_values("final_score", ascending=False)
+
+    rec["distance"] = rec["distance"].apply(
+        lambda x: f"{x:.2f} km"
+    )
+
+    return rec[
+        ["name", "distance", "avg_rating", "final_score"]
+    ].head(top_n)
+
+
+# ==========================================
+# PRUEBA DEL SISTEMA
+# ==========================================
+
 for user_id in locations['user_id']:
+
     print(f"Recomendaciones para Usuario {user_id}:")
-    print(recommend(user_id), end="\n\n")
+
+    print(recommend(user_id))
+
+    print("\n")
