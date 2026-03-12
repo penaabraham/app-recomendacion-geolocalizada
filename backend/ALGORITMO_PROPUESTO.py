@@ -15,17 +15,25 @@ from tensorflow.keras.layers import Dense, Embedding, Flatten
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 
+<<<<<<< HEAD
 
 # ==========================================
 # CARGA DE DATOS
 # ==========================================
 
+=======
+# Cargar Datos
+# Datos de calificaciones (simulando varios usuarios calificando diferentes productos)
+>>>>>>> dataSets
 users = pd.read_json("data/users.json")
 locations = pd.read_json("data/locations.json")
 products = pd.read_json("data/products.json")
 ratings = pd.read_json("data/ratings.json")
 comments = pd.read_json("data/comments.json")
+<<<<<<< HEAD
 
+=======
+>>>>>>> dataSets
 
 # ==========================================
 # PREPROCESAMIENTO DE DATOS
