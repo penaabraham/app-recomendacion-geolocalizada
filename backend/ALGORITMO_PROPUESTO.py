@@ -15,25 +15,13 @@ from tensorflow.keras.layers import Dense, Embedding, Flatten
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 
-<<<<<<< HEAD
-
-# ==========================================
-# CARGA DE DATOS
-# ==========================================
-
-=======
 # Cargar Datos
 # Datos de calificaciones (simulando varios usuarios calificando diferentes productos)
->>>>>>> dataSets
 users = pd.read_json("data/users.json")
 locations = pd.read_json("data/locations.json")
 products = pd.read_json("data/products.json")
 ratings = pd.read_json("data/ratings.json")
 comments = pd.read_json("data/comments.json")
-<<<<<<< HEAD
-
-=======
->>>>>>> dataSets
 
 # ==========================================
 # PREPROCESAMIENTO DE DATOS
@@ -257,8 +245,8 @@ def recommend(user_id, lat_manual=None, lon_manual=None, top_n=5):
 
     rec = products.copy()
 
-    rating_avg = rating_avg.drop_duplicates(subset=['item_id'])
-    rec = rec.merge(rating_avg, on="item_id", how="left")
+    df_rating_clean = rating_avg.drop_duplicates(subset=['item_id'])
+    rec = rec.merge(df_rating_clean, on="item_id", how="left")
     rec["avg_rating"] = rec["avg_rating"].fillna(0)
 
     rec["geo_score"] = normalize_distance(rec["distance"])
