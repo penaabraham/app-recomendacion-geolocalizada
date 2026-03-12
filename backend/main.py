@@ -10,19 +10,22 @@ def obtener_recomendacion(
     lat: float = Query(None), 
     lon: float = Query(None)
 ):
-    # 2. Definimos coordenadas: si vienen del celular se usan, si no, valores fijos
-    mi_latitud = lat if lat is not None else 19.4326  
-    mi_longitud = lon if lon is not None else -99.1332
+    try:
+        # 2. Definimos coordenadas: si vienen del celular se usan, si no, valores fijos
+        mi_latitud = lat if lat is not None else 19.4326  
+        mi_longitud = lon if lon is not None else -99.1332
 
-    # 3. Llamamos a la función de tu algoritmo (3 parámetros)
-    resultado = algoritmo.recommend(
-        user_id=user_id, 
-        lat_manual=lat, 
-        lon_manual=lon,
-        )
-    
-    # 4. Convertimos a diccionario (records) para que Flutter lo entienda
-    return resultado.to_dict(orient='records')
+        # 3. Llamamos a la función de tu algoritmo (3 parámetros)
+        resultado = algoritmo.recommend(
+            user_id=user_id, 
+            lat_manual=lat, 
+            lon_manual=lon,
+            )
+        
+        # 4. Convertimos a diccionario (records) para que Flutter lo entienda
+        return resultado.to_dict(orient='records')
+    except Exception as e:
+        return {"error_interno": str(e), "tipo": str(type(e))}
 
 @app.get("/")
 def read_root():
