@@ -289,24 +289,23 @@ def generate_reason(row):
         geo = float(row["geo_score"])
         rat = float(row["rating_score"])
         cont = float(row["content_score"])
-    except TypeError:
-        # Si por algo llega como serie, tomamos el primer elemento
-        geo = float(row["geo_score"].iloc[0])
-        rat = float(row["rating_score"].iloc[0])
-        cont = float(row["content_score"].iloc[0])
 
-    if geo > 0.7:
-        reasons.append("Cerca de tu ubicación")
-    if rat > 0.6:
-        reasons.append("Muy bien calificado por usuarios")
-    if cont > 0.5:
-        reasons.append("Similar a productos populares")
+        if geo > 0.7:
+            reasons.append("Cerca de tu ubicación")
+        if rat > 0.6:
+            reasons.append("Muy bien calificado por usuarios")
+        if cont > 0.5:
+            reasons.append("Similar a productos populares")
+
+    except Exception as e:
+        # Si algo falla en la conversión, no rompemos el programa
+        print(f"Error en generate_reason: {e}")
+
 
     if not reasons:
         reasons.append("Recomendado por el sistema")
 
-    # MUY IMPORTANTE: Flutter espera un String, no una lista. 
-    # Une las razones con una coma.
+    # Retornamos un solo String para que Flutter no tenga problemas de tipos
     return ", ".join(reasons)
 
 # ==========================================
