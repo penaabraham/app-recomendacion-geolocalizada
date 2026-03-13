@@ -283,24 +283,31 @@ def recommend(user_id, lat_manual=None, lon_manual=None, top_n=5):
 def generate_reason(row):
     reasons = []
     
-    # Extraemos los valores asegurando que sean flotantes simples
-    geo = float(row["geo_score"])
-    rat = float(row["rating_score"])
-    cont = float(row["content_score"])
+    # Usamos .item() o aseguramos que sea el primer valor si es una serie
+    # Pero lo más seguro es acceder directamente ya que apply lo pasa como escalar
+    try:
+        geo = float(row["geo_score"])
+        rat = float(row["rating_score"])
+        cont = float(row["content_score"])
+    except TypeError:
+        # Si por algo llega como serie, tomamos el primer elemento
+        geo = float(row["geo_score"].iloc[0])
+        rat = float(row["rating_score"].iloc[0])
+        cont = float(row["content_score"].iloc[0])
 
     if geo > 0.7:
         reasons.append("Cerca de tu ubicación")
-
     if rat > 0.6:
         reasons.append("Muy bien calificado por usuarios")
-
     if cont > 0.5:
         reasons.append("Similar a productos populares")
 
-    if len(reasons) == 0:
+    if not reasons:
         reasons.append("Recomendado por el sistema")
 
-    return reasons
+    # MUY IMPORTANTE: Flutter espera un String, no una lista. 
+    # Une las razones con una coma.
+    return ", ".join(reasons)
 
 # ==========================================
 # PRUEBA DEL SISTEMA
