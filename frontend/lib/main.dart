@@ -109,36 +109,54 @@ class _RecsPageState extends State<RecsPage> {
                         itemCount: recommendations.length,
                         itemBuilder: (context, index) {
                           final item = recommendations[index];
+                          // Redondeamos el rating a 1 decimal
+                          final double rating = double.tryParse(item['avg_rating'].toString()) ?? 0.0;
                           return Card(
-                            margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                            elevation: 3,
+                            margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                             child: ListTile(
-                              leading: const Icon(Icons.place, color: Colors.redAccent),
+                              leading: CircleAvatar(
+                                backgroundColor: Colors.indigo.withOpacity(0.1),
+                                child: const Icon(Icons.shopping_bag, color: Colors.indigo),
+                              ),
                               title: Text(item['name'], style: const TextStyle(fontWeight: FontWeight.bold)),
                               subtitle: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text("Distancia: ${item['distance']}"),
                                   const SizedBox(height: 4),
-
-                                  if (item['reason'] != null)
-                                    ...List.generate(
-                                      item['reason'].length,
-                                      (i) => Row(
-                                        children: [
-                                          const Icon(Icons.check_circle, size: 14, color: Colors.green),
-                                          const SizedBox(width: 4),
-                                          Text(
-                                            item['reason'].toString(), // El .toString() es un salvavidas extra
-                                            style: TextStyle(color: Colors.grey[600]),
-                                          )
-                                        ],
-                                      ),
-                                    ),
+                                  Row(
+                                    children: [
+                                      const Icon(Icons.location_on, size: 14, color: Colors.red),
+                                      Text(" ${item['distance']}"),
+                                      const SizedBox(width: 15),
+                                      const Icon(Icons.star, size: 14, color: Colors.amber),
+                                      Text(" ${rating.toStringAsFixed(1)}"), // <--- Redondeo aquí
+                                    ],
+                                  ),
+                                  const SizedBox(height: 8),
+                                  // Mostramos las razones como "Chips" o etiquetas
+                                  Wrap(
+                                    spacing: 5,
+                                    children: (item['reason'] as String).split(',').map<String>((r) => r.trim()).where((r) => r.isNotEmpty).map<Widget>((r) {
+                                      return Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                        decoration: BoxDecoration(
+                                          color: Colors.green.withOpacity(0.1),
+                                          borderRadius: BorderRadius.circular(10),
+                                          border: Border.all(color: Colors.green.withOpacity(0.3))
+                                        ),
+                                        child: Text(
+                                          "✓ $r",
+                                          style: const TextStyle(fontSize: 10, color: Colors.green),
+                                        ),
+                                      );
+                                    }).toList(),
+                                  )
                                 ],
                               ),
                             ),
-                          );
-                        },
+                          );},
                       ),
           ),
         ],
