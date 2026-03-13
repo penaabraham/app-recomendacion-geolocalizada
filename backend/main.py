@@ -8,7 +8,8 @@ app = FastAPI()
 def obtener_recomendacion(
     user_id: int, 
     lat: float = Query(None), 
-    lon: float = Query(None)
+    lon: float = Query(None),
+    limit: int = Query(None),  # None = todos los productos
 ):
     try:
         # 2. Definimos coordenadas: si vienen del celular se usan, si no, valores fijos
@@ -20,6 +21,7 @@ def obtener_recomendacion(
             user_id=user_id, 
             lat_manual=mi_latitud, 
             lon_manual=mi_longitud,
+            top_n=limit,
             )
         
         # 4. Convertimos a diccionario (records) para que Flutter lo entienda

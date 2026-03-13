@@ -242,7 +242,7 @@ def normalize_rating(ratings):
 # SISTEMA DE RECOMENDACIÓN HÍBRIDO
 # ==========================================
 
-def recommend(user_id, lat_manual=None, lon_manual=None, top_n=5):
+def recommend(user_id, lat_manual=None, lon_manual=None, top_n=None):
 
     u_lat, u_lon = add_distance(user_id, lat_manual, lon_manual)
 
