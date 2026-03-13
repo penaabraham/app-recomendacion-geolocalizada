@@ -18,12 +18,13 @@ def obtener_recomendacion(
         # 3. Llamamos a la función de tu algoritmo (3 parámetros)
         resultado = algoritmo.recommend(
             user_id=user_id, 
-            lat_manual=lat, 
-            lon_manual=lon,
+            lat_manual=mi_latitud, 
+            lon_manual=mi_longitud,
             )
         
         # 4. Convertimos a diccionario (records) para que Flutter lo entienda
         return resultado.to_dict(orient='records')
+    
     except Exception as e:
         return {"error_interno": str(e), "tipo": str(type(e))}
 

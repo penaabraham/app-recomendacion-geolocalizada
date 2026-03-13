@@ -28,19 +28,22 @@ comments = pd.read_json("data/comments.json")
 # ==========================================
 
 # ------------------------------------------------
-# FILTRADO BASADO EN CONTENIDO
+# FILTRADO BASADO EN CONTENIDO (CORREGIDO)
 # ------------------------------------------------
 
-# Vectorización de comentarios usando TF-IDF
-tfidf = TfidfVectorizer(stop_words='english')
-tfidf_matrix = tfidf.fit_transform(comments['comment'])
+# 1. Agrupar todos los comentarios de un mismo producto en un solo texto
+comments_grouped = comments.groupby('item_id')['comment'].apply(' '.join).reset_index()
 
-# Similitud coseno entre productos basados en comentarios
+# 2. Vectorización usando TF-IDF
+tfidf = TfidfVectorizer(stop_words='english')
+tfidf_matrix = tfidf.fit_transform(comments_grouped['comment'])
+
+# 3. Similitud coseno entre productos (ahora sí, producto vs producto)
 cosine_sim = cosine_similarity(tfidf_matrix, tfidf_matrix)
 
-# Crear DataFrame de similitud usando item_id como índice
-item_ids = comments["item_id"].tolist()
-similarity_df = pd.DataFrame(cosine_sim, index=item_ids, columns=item_ids)
+# 4. Crear DataFrame de similitud sin IDs duplicados
+item_ids_unique = comments_grouped["item_id"].tolist()
+similarity_df = pd.DataFrame(cosine_sim, index=item_ids_unique, columns=item_ids_unique)
 
 
 # ------------------------------------------------

@@ -127,7 +127,10 @@ class _RecsPageState extends State<RecsPage> {
                                         children: [
                                           const Icon(Icons.check_circle, size: 14, color: Colors.green),
                                           const SizedBox(width: 4),
-                                          Text(item['reason'][i]),
+                                          Text(
+                                            item['reason'].toString(), // El .toString() es un salvavidas extra
+                                            style: TextStyle(color: Colors.grey[600]),
+                                          )
                                         ],
                                       ),
                                     ),
