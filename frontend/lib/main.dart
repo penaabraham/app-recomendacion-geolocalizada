@@ -57,10 +57,21 @@ class _RecsPageState extends State<RecsPage> {
       final response = await http.get(Uri.parse(url));
 
       if (response.statusCode == 200) {
+        final decodedData = json.decode(response.body);
+
         setState(() {
-          recommendations = json.decode(response.body);
+          // VALIDACIÓN CLAVE: Verificamos si es una lista o un mapa de error
+          if (decodedData is List) {
+            recommendations = decodedData;
+            statusMessage = "Cerca de ti:";
+          } else if (decodedData is Map && decodedData.containsKey('error_interno')) {
+            // Si el backend mandó el JSON de error que configuramos
+            statusMessage = "Error Algoritmo: ${decodedData['error_interno']}";
+            recommendations = []; 
+          } else {
+            statusMessage = "Respuesta inesperada del servidor";
+          }
           isLoading = false;
-          statusMessage = "Cerca de ti:";
         });
       } else {
         setState(() {
@@ -71,11 +82,10 @@ class _RecsPageState extends State<RecsPage> {
     } catch (e) {
       setState(() {
         isLoading = false;
-        statusMessage = "Error: $e";
+        statusMessage = "Error de conexión: $e";
       });
     }
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
