@@ -27,6 +27,10 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 import pickle
 
+import sys
+print("INICIO", flush=True)
+sys.stdout.flush()
+
 MODELS_DIR = "models"
 os.makedirs(MODELS_DIR, exist_ok=True)
 

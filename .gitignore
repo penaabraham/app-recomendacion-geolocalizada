@@ -30,3 +30,4 @@ android/**/*.iml
 backend/venv/
 backend/__pycache__/
 # models/ NO va aquí — sí debe commitearse
+backend/venv_render/
