@@ -25,3 +25,8 @@ android/**/*.iml
 
 # PDF compilado (opcional si no quieres subirlo)
 *.pdf
+
+
+backend/venv/
+backend/__pycache__/
+# models/ NO va aquí — sí debe commitearse
