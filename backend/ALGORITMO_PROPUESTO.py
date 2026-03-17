@@ -24,6 +24,7 @@ print(">>> Cargando modelos serializados...")
 products  = pd.read_json(f"{MODELS_DIR}/products_with_clusters.json")
 locations = pd.read_json(f"{MODELS_DIR}/locations_with_clusters.json")
 ratings   = pd.read_json("data/ratings.json")
+comments = pd.read_json("data/comments.json")
 
 # Modelos sklearn
 tfidf         = joblib.load(f"{MODELS_DIR}/tfidf.pkl")
@@ -99,6 +100,41 @@ def normalize_distance(distances):
 def normalize_rating(ratings):
     return (ratings - ratings.min()) / (ratings.max() - ratings.min() + 1e-6)
 
+# ==========================================
+# CÁLCULO DE SCORES DE TEXTO (LDA + Keras)
+# ==========================================
+def compute_text_scores():
+    """
+    Calcula:
+    - tfidf_score (ya existe indirectamente)
+    - lda_score
+    - sentiment_score (modelo Keras)
+    """
+
+    # ===== LDA SCORE =====
+    try:
+        lda_matrix = joblib.load(f"{MODELS_DIR}/lda_matrix.pkl")
+        lda_score = pd.Series(lda_matrix.max(axis=1))  # tema dominante
+        lda_score = normalize_rating(lda_score)
+    except:
+        lda_score = pd.Series(np.zeros(len(products)))
+
+    # ===== SENTIMENT SCORE (Keras) =====
+    try:
+        comments_grouped = comments.groupby('item_id')['comment'].apply(' '.join)
+
+        sequences = tokenizer.texts_to_sequences(comments_grouped)
+        padded = pad_sequences(sequences, maxlen=100)
+
+        preds = model.predict(padded, verbose=0).flatten()
+
+        sentiment_score = pd.Series(preds, index=comments_grouped.index)
+        sentiment_score = normalize_rating(sentiment_score)
+    except Exception as e:
+        print(f"Error en sentiment_score: {e}")
+        sentiment_score = pd.Series(np.zeros(len(products)))
+
+    return lda_score, sentiment_score
 
 # ==========================================
 # SISTEMA DE RECOMENDACIÓN HÍBRIDO
@@ -117,15 +153,39 @@ def recommend(user_id, lat_manual=None, lon_manual=None, top_n=5):
     rec["geo_score"]    = normalize_distance(rec["distance"])
     rec["rating_score"] = normalize_rating(rec["avg_rating"])
 
-    rec["content_score"] = [
+    # --- TF-IDF (igual que antes) ---
+    rec["tfidf_score"] = [
         similarity_df[item].mean() if item in similarity_df.columns else 0
         for item in rec["item_id"]
     ]
 
+    # ===== LDA + SENTIMENT =====
+    lda_score, sentiment_score = compute_text_scores()
+
+    # Mapear scores a productos
+    rec["lda_score"] = rec.index.map(lambda i: lda_score[i] if i < len(lda_score) else 0)
+
+    rec["sentiment_score"] = rec["item_id"].map(
+        sentiment_score
+    ).fillna(0)
+
+    # ===== NORMALIZAR POR SEGURIDAD =====
+    rec["tfidf_score"]     = normalize_rating(pd.Series(rec["tfidf_score"]))
+    rec["lda_score"]       = normalize_rating(pd.Series(rec["lda_score"]))
+    rec["sentiment_score"] = normalize_rating(pd.Series(rec["sentiment_score"]))
+
+    # --- Content score combinado ---
+    rec["content_score"] = (
+        0.5 * rec["tfidf_score"] +
+        0.2 * rec["lda_score"] +
+        0.3 * rec["sentiment_score"]
+    )
+
+    # --- Score final combinado ---
     rec["final_score"] = (
-        0.5 * rec["geo_score"] +
-        0.3 * rec["rating_score"] +
-        0.2 * rec["content_score"]
+        0.4 * rec["geo_score"] +
+        0.25 * rec["rating_score"] +
+        0.35 * rec["content_score"]
     )
 
     rec["reason"] = rec.apply(generate_reason, axis=1)
