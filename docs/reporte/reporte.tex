@@ -175,28 +175,232 @@
 	
 	Estos trabajos refuerzan la idea de que el valor de un sistema de recomendación no radica únicamente en la novedad del algoritmo empleado, sino en su correcta adaptación, integración y validación dentro de un sistema funcional. Bajo esta perspectiva, el presente proyecto se enmarca como una aplicación práctica de un algoritmo híbrido existente, adaptado a un entorno móvil con geolocalización en tiempo real.
 	
-	
 	% ======================================================
 	\section{Metodología}
 	
-	\subsection{Tipo de investigación}
-	Investigación aplicada con enfoque experimental.
+	El presente proyecto se enmarca dentro de la investigación aplicada con enfoque
+	experimental, dado que su propósito central no es generar nuevo conocimiento
+	teórico, sino adaptar, integrar y validar técnicamente un algoritmo de
+	recomendación híbrido existente en un entorno operativo real. El enfoque
+	experimental se justifica en la medida en que se construyó un sistema funcional
+	sobre el cual se realizaron pruebas controladas para observar el comportamiento
+	del algoritmo bajo distintas condiciones de entrada, particularmente en lo
+	referente a la variación de coordenadas geográficas.
 	
 	\subsection{Arquitectura del sistema}
-	Descripción cliente-servidor.
+	
+	El sistema se diseñó bajo una arquitectura cliente-servidor distribuida en tres
+	capas claramente delimitadas: el frontend móvil, el backend de procesamiento y
+	el módulo del algoritmo de recomendación.
+	
+	El \textbf{frontend} fue desarrollado como una aplicación móvil multiplataforma
+	utilizando Flutter. Su responsabilidad principal es obtener las coordenadas
+	geográficas del dispositivo mediante el servicio GPS, enviarlas al backend a
+	través de una solicitud HTTP, y presentar los resultados al usuario en forma de
+	lista ordenada con información de distancia, calificación y razones de
+	recomendación. La interfaz incorpora además una barra de búsqueda con filtrado
+	en tiempo real y paginación progresiva de resultados.
+	
+	El \textbf{backend} fue implementado con FastAPI, un framework de Python de alto
+	rendimiento para el desarrollo de APIs REST. Expone un único endpoint
+	\texttt{GET /recomendar/\{user\_id\}} que recibe los parámetros de latitud,
+	longitud y un límite opcional de resultados. Al arrancar el servidor, el backend
+	carga en memoria todos los modelos previamente serializados por un script de
+	entrenamiento independiente (\texttt{train.py}), de modo que las solicitudes
+	en tiempo real no incurren en costos de reentrenamiento. Ante cualquier
+	excepción, el backend retorna un objeto JSON con la clave
+	\texttt{error\_interno}, permitiendo al frontend distinguir errores del
+	algoritmo de errores de red.
+	
+	El \textbf{módulo del algoritmo} opera como una biblioteca interna invocada por
+	el backend. Concentra toda la lógica de cálculo de scores, normalización,
+	combinación ponderada y generación de razones de recomendación, sin
+	dependencias hacia la capa de presentación. Esta separación permite modificar
+	o sustituir el algoritmo sin afectar al resto del sistema.
+	
+	La comunicación entre capas se realiza exclusivamente mediante JSON sobre HTTPS,
+	lo que garantiza interoperabilidad e independencia tecnológica entre el cliente
+	móvil y el servidor.
 	
 	\subsection{Descripción del algoritmo híbrido}
-	Modelo matemático y lógica de combinación.
+	
+	El algoritmo implementado sigue la propuesta de Martínez Simón
+	\autocite{dael_recomendacion_hibrida} y combina cuatro fuentes de información
+	en un score final ponderado. A continuación se describe cada componente y su
+	contribución al resultado.
+	
+	\subsubsection*{Score geográfico}
+	
+	Para cada producto $p$ con coordenadas $(\phi_p, \lambda_p)$ y un usuario
+	ubicado en $(\phi_u, \lambda_u)$, la distancia física se calcula mediante la
+	fórmula de Haversine:
+	
+	\begin{equation}
+		d = 2R \arctan2\!\left(\sqrt{a},\, \sqrt{1-a}\right)
+		\label{eq:haversine}
+	\end{equation}
+	
+	\noindent donde $R = 6{,}371$ km es el radio medio terrestre y
+	
+	\begin{equation}
+		a = \sin^2\!\left(\frac{\Delta\phi}{2}\right)
+		+ \cos\phi_u \cos\phi_p \sin^2\!\left(\frac{\Delta\lambda}{2}\right)
+		\label{eq:haversine_a}
+	\end{equation}
+	
+	La distancia se normaliza de forma inversa para que los productos más cercanos
+	obtengan un score mayor:
+	
+	\begin{equation}
+		\text{geo\_score} = 1 - \frac{d - d_{\min}}{d_{\max} - d_{\min} + \varepsilon}
+		\label{eq:geo_score}
+	\end{equation}
+	
+	\subsubsection*{Score de calificación}
+	
+	El promedio de calificaciones por producto se obtiene a partir de las
+	interacciones históricas y se normaliza en el rango $[0, 1]$:
+	
+	\begin{equation}
+		\text{rating\_score} = \frac{\bar{r} - \bar{r}_{\min}}{\bar{r}_{\max} - \bar{r}_{\min} + \varepsilon}
+		\label{eq:rating_score}
+	\end{equation}
+	
+	\subsubsection*{Score de contenido}
+	
+	El score de contenido integra tres señales derivadas del análisis de los
+	comentarios asociados a cada producto:
+	
+	\begin{itemize}
+		\item \textbf{TF-IDF}: los comentarios de cada producto se agrupan y
+		vectorizan mediante TF-IDF. La similitud coseno promedio entre el vector
+		de un producto y el resto del catálogo sirve como indicador de relevancia
+		textual.
+		
+		\item \textbf{LDA} (\textit{Latent Dirichlet Allocation}): se entrena un
+		modelo de cinco tópicos sobre la matriz TF-IDF. La intensidad del tópico
+		dominante por producto, una vez normalizada, aproxima la coherencia
+		temática del contenido asociado.
+		
+		\item \textbf{Score de sentimiento}: un modelo de embeddings entrenado con
+		Keras clasifica los comentarios como positivos (calificación $> 3$) o
+		negativos. La probabilidad de sentimiento positivo, agregada por producto
+		y normalizada, refleja el tono general de las opiniones de los usuarios.
+	\end{itemize}
+	
+	El score de contenido combinado se calcula como:
+	
+	\begin{equation}
+		\text{content\_score} = 0.5 \cdot \text{tfidf\_score}
+		+ 0.2 \cdot \text{lda\_score}
+		+ 0.3 \cdot \text{sentiment\_score}
+		\label{eq:content_score}
+	\end{equation}
+	
+	\subsubsection*{Score final}
+	
+	Los tres componentes se integran en un score final ponderado:
+	
+	\begin{equation}
+		\text{final\_score} = 0.40 \cdot \text{geo\_score}
+		+ 0.25 \cdot \text{rating\_score}
+		+ 0.35 \cdot \text{content\_score}
+		\label{eq:final_score}
+	\end{equation}
+	
+	Los pesos fueron calibrados de forma empírica con el objetivo de otorgar
+	prioridad a la proximidad geográfica como factor contextual determinante,
+	al tiempo que se preserva una contribución significativa del análisis textual,
+	reconociendo que la calidad percibida del producto no se reduce únicamente
+	a su calificación numérica.
+	
+	Los productos se ordenan de mayor a menor \texttt{final\_score} y se
+	devuelven al usuario acompañados de una etiqueta explicativa generada de
+	forma automática a partir de los umbrales individuales de cada score, con el
+	propósito de hacer transparente el criterio de recomendación.
 	
 	\subsection{Tecnologías utilizadas}
-	FastAPI, Flutter, base de datos, etc.
+	
+	El desarrollo del sistema implicó la integración de tecnologías en tres
+	dominios: aplicación móvil, backend y procesamiento de datos.
+	
+	En el \textbf{frontend} se utilizó Flutter con el lenguaje Dart. La elección
+	se fundamenta en su capacidad multiplataforma (Android e iOS desde una única
+	base de código) y en la disponibilidad de paquetes como \texttt{geolocator}
+	para la obtención de coordenadas GPS y \texttt{http} para la comunicación
+	con el backend.
+	
+	En el \textbf{backend} se empleó \texttt{FastAPI 0.110.0} sobre Python 3,
+	servido mediante \texttt{uvicorn 0.28.0}. Su sistema de tipado mediante
+	anotaciones permite la validación automática de parámetros de entrada y la
+	generación de documentación interactiva, lo que facilitó las pruebas durante
+	el desarrollo. El servidor fue desplegado en la plataforma Render, accesible
+	mediante HTTPS.
+	
+	Para el \textbf{procesamiento de datos y modelado}, se utilizaron las
+	siguientes bibliotecas del ecosistema científico de Python:
+	
+	\begin{itemize}
+		\item \texttt{pandas 2.2.3} y \texttt{NumPy 1.26.4}: manipulación de
+		datos tabulares y operaciones vectoriales.
+		\item \texttt{scikit-learn 1.8.0}: vectorización TF-IDF, similitud coseno,
+		K-Means y LDA.
+		\item \texttt{tensorflow-cpu 2.16.1} / \texttt{Keras}: construcción y
+		entrenamiento del modelo de embeddings para análisis de sentimiento. Se
+		utilizó la variante \texttt{cpu} dado que el entorno de despliegue no
+		cuenta con GPU dedicada.
+		\item \texttt{joblib 1.5.3} y \texttt{pickle}: serialización de modelos
+		entrenados para su carga en tiempo de ejecución sin reentrenamiento.
+	\end{itemize}
 	
 	\subsection{Conjunto de datos}
-	Origen y características.
 	
-	\subsection{Métricas de evaluación}
+	Dado que el proyecto se desarrolla en un contexto académico con restricciones
+	de privacidad, no se utilizaron datos reales de usuarios ni de productos. En
+	su lugar, se generó un conjunto de datos sintéticos mediante un script de
+	Python diseñado específicamente para este propósito.
 	
-	% ======================================================
+	El conjunto de datos se compone de cinco archivos en formato JSON:
+	
+	\begin{itemize}
+		\item \texttt{users.json}: 60 registros de usuarios, cada uno con un
+		campo \texttt{user\_id} como identificador único entero.
+		
+		\item \texttt{locations.json}: 60 registros de coordenadas geográficas,
+		vinculados a cada usuario mediante \texttt{user\_id}. Los valores de
+		latitud y longitud se generaron de forma aleatoria uniforme dentro de
+		los rangos $[19.2,\ 19.6]$ y $[-99.4,\ -98.9]$ respectivamente,
+		correspondientes a una zona de la región centro de México.
+		
+		\item \texttt{products.json}: 150 productos con campos \texttt{item\_id},
+		\texttt{name} y coordenadas geográficas distribuidas en la misma zona
+		que los usuarios. Los nombres se construyeron combinando una marca y
+		modelo de una lista de 20 categorías de productos electrónicos y del
+		hogar con un sufijo numérico único.
+		
+		\item \texttt{ratings.json}: 900 calificaciones con campos
+		\texttt{user\_id}, \texttt{item\_id}, \texttt{rating} (entero en escala
+		1--5, distribución uniforme discreta) y \texttt{timestamp} (marca
+		temporal Unix con desplazamiento aleatorio de hasta $10^6$ segundos
+		hacia el pasado).
+		
+		\item \texttt{comments.json}: 250 comentarios textuales con campos
+		\texttt{item\_id} y \texttt{comment}. Cada comentario se seleccionó
+		aleatoriamente de una plantilla de diez frases en español con
+		valoraciones tanto positivas como negativas, con el propósito de
+		proporcionar variabilidad suficiente para los modelos TF-IDF, LDA y
+		de sentimiento.
+	\end{itemize}
+	
+	Se reconoce que la naturaleza sintética de los datos constituye una
+	limitación en cuanto a la validación de la precisión de las recomendaciones
+	en condiciones reales. En particular, la generación de comentarios a partir
+	de plantillas fijas reduce la riqueza léxica que cabría esperar en un corpus
+	de opiniones auténticas, lo que puede afectar la discriminación de los
+	modelos de texto. No obstante, esta decisión es consistente con el objetivo
+	del proyecto, que es la validación técnica del sistema y no la evaluación
+	de su efectividad comercial.
+	
 	\section{Arquitectura del Sistema}
 	
 	Modelo C4.
