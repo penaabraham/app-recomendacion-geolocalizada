@@ -496,27 +496,418 @@
 	% ======================================================
 	\section{Implementación}
 	
+	Esta sección documenta el proceso de implementación del sistema, describiendo
+	los bloques de código que conforman tanto el backend como la aplicación móvil.
+	La exposición sigue un flujo lógico que va desde la instalación de dependencias
+	hasta la generación de recomendaciones, con el propósito de reflejar el orden
+	en que los distintos módulos fueron diseñados e integrados.
+	
+	% ======================================================
 	\subsection{Backend}
 	
-	\begin{lstlisting}[language=Python, caption=Endpoint de recomendación]
+	El backend del sistema está compuesto por tres archivos principales:
+	\texttt{train.py}, responsable del entrenamiento y serialización de modelos;
+	\texttt{ALGORITMO\_PROPUESTO.py}, que implementa la lógica de recomendación
+	híbrida; y \texttt{main.py}, que expone la funcionalidad como una API REST.
+	A continuación se documentan en un flujo unificado de seis pasos.
+	
+	% ──────────────────────────────────────────────────────
+	\subsubsection{Paso 1: Instalación de Bibliotecas Necesarias}
+	
+	El entorno de ejecución requiere un conjunto de bibliotecas especializadas
+	para el procesamiento de datos, el aprendizaje automático y el servicio web.
+	Todas las dependencias se declaran en el archivo \texttt{requirements.txt},
+	lo que permite reproducir el entorno de forma exacta tanto en desarrollo local
+	como en la plataforma de despliegue. La instalación se realiza con el gestor
+	de paquetes \texttt{pip}:
+	
+	\begin{lstlisting}[language=bash, caption=Instalación de dependencias]
+		pip install -r requirements.txt
+	\end{lstlisting}
+	
+	El contenido del archivo \texttt{requirements.txt} es el siguiente:
+	
+	\begin{lstlisting}[caption=requirements.txt]
+		fastapi==0.110.0
+		uvicorn==0.28.0
+		pandas==2.2.3
+		numpy==1.26.4
+		scikit-learn==1.8.0
+		tensorflow-cpu==2.16.1
+		joblib==1.5.3
+	\end{lstlisting}
+	
+	% ──────────────────────────────────────────────────────
+	\subsubsection{Paso 2: Importación de Bibliotecas}
+	
+	Una vez instaladas las dependencias, cada módulo importa las bibliotecas que
+	requiere para su función específica. En \texttt{train.py}, se importan todas
+	las herramientas necesarias para el entrenamiento y serialización de los
+	modelos. En \texttt{ALGORITMO\_PROPUESTO.py}, se importan únicamente las
+	bibliotecas de inferencia, ya que el entrenamiento ocurre de forma separada.
+	En \texttt{main.py}, las importaciones se limitan a FastAPI y al módulo del
+	algoritmo.
+	
+	\begin{lstlisting}[language=Python, caption=Importaciones en train.py]
+		import os
+		import pandas as pd
+		import numpy as np
+		import joblib
+		import pickle
+		
+		from sklearn.metrics.pairwise import cosine_similarity
+		from sklearn.feature_extraction.text import TfidfVectorizer
+		from sklearn.cluster import KMeans
+		from sklearn.decomposition import LatentDirichletAllocation as LDA
+		
+		import tensorflow as tf
+		from tensorflow.keras.models import Sequential
+		from tensorflow.keras.layers import Dense, Embedding, Flatten
+		from tensorflow.keras.preprocessing.text import Tokenizer
+		from tensorflow.keras.preprocessing.sequence import pad_sequences
+	\end{lstlisting}
+	
+	\begin{lstlisting}[language=Python, caption=Importaciones en ALGORITMO\_PROPUESTO.py]
+		import pickle
+		import pandas as pd
+		import numpy as np
+		import joblib
+		import tensorflow as tf
+		from tensorflow.keras.preprocessing.sequence import pad_sequences
+	\end{lstlisting}
+	
+	\begin{lstlisting}[language=Python, caption=Importaciones en main.py]
+		from fastapi import FastAPI, Query
+		import ALGORITMO_PROPUESTO as algoritmo
+	\end{lstlisting}
+	
+	% ──────────────────────────────────────────────────────
+	\subsubsection{Paso 3: Carga de Datos}
+	
+	Los datos del sistema se encuentran almacenados en cinco archivos JSON dentro
+	del directorio \texttt{data/}. En \texttt{train.py} se cargan para el
+	entrenamiento de los modelos. En \texttt{ALGORITMO\_PROPUESTO.py} se cargan
+	los datos junto con los artefactos ya serializados, de modo que el servidor
+	no repite el proceso de entrenamiento en cada solicitud.
+	
+	\begin{lstlisting}[language=Python, caption=Carga de datos en train.py]
+		users     = pd.read_json("data/users.json")
+		locations = pd.read_json("data/locations.json")
+		products  = pd.read_json("data/products.json")
+		ratings   = pd.read_json("data/ratings.json")
+		comments  = pd.read_json("data/comments.json")
+	\end{lstlisting}
+	
+	En \texttt{ALGORITMO\_PROPUESTO.py}, los modelos serializados se cargan desde
+	la carpeta \texttt{models/} generada por \texttt{train.py}. Este enfoque
+	separa el costo computacional del entrenamiento de la fase de servicio,
+	garantizando tiempos de respuesta adecuados en producción:
+	
+	\begin{lstlisting}[language=Python, caption=Carga de modelos serializados en ALGORITMO\_PROPUESTO.py]
+		MODELS_DIR = "models"
+		
+		products  = pd.read_json(f"{MODELS_DIR}/products_with_clusters.json")
+		locations = pd.read_json(f"{MODELS_DIR}/locations_with_clusters.json")
+		ratings   = pd.read_json("data/ratings.json")
+		comments  = pd.read_json("data/comments.json")
+		
+		tfidf         = joblib.load(f"{MODELS_DIR}/tfidf.pkl")
+		similarity_df = joblib.load(f"{MODELS_DIR}/similarity_df.pkl")
+		lda           = joblib.load(f"{MODELS_DIR}/lda.pkl")
+		rating_matrix = joblib.load(f"{MODELS_DIR}/rating_matrix.pkl")
+		user_sim      = joblib.load(f"{MODELS_DIR}/user_sim.pkl")
+		rating_avg    = joblib.load(f"{MODELS_DIR}/rating_avg.pkl")
+		kmeans        = joblib.load(f"{MODELS_DIR}/kmeans.pkl")
+		
+		with open(f"{MODELS_DIR}/tokenizer.pkl", "rb") as f:
+		tokenizer = pickle.load(f)
+		
+		model = tf.keras.models.load_model(f"{MODELS_DIR}/keras_model.keras")
+	\end{lstlisting}
+	
+	% ──────────────────────────────────────────────────────
+	\subsubsection{Paso 4: Procesamiento de Datos}
+	
+	El procesamiento de datos comprende tres técnicas complementarias que
+	alimentan el componente de contenido del algoritmo híbrido: filtrado basado
+	en contenido mediante TF-IDF, cálculo de similitud coseno entre productos,
+	y clasificación de sentimientos mediante un modelo de aprendizaje profundo.
+	Este procesamiento ocurre íntegramente en \texttt{train.py} y sus resultados
+	se persisten como artefactos serializados.
+	
+	\paragraph{Filtrado Basado en Contenido y Cálculo de Similitud.}
+	Los comentarios asociados a cada producto se agrupan en un único documento
+	por \texttt{item\_id} y se vectorizan mediante TF-IDF, técnica que pondera
+	la frecuencia de cada término en relación con su presencia en el conjunto
+	total de documentos. Sobre la matriz resultante se calcula la similitud
+	coseno entre todos los pares de productos, obteniendo una medida de
+	proximidad semántica que no depende de la longitud de los textos. El modelo
+	LDA complementa este análisis al identificar cinco tópicos latentes en el
+	corpus, cuya distribución por producto se emplea posteriormente como señal
+	adicional en el score de contenido:
+	
+	\begin{lstlisting}[language=Python, caption=TF-IDF + similitud coseno + LDA en train.py]
+		# Agrupar comentarios por producto
+		comments_grouped = comments.groupby('item_id')['comment'] \
+		.apply(' '.join).reset_index()
+		
+		# Vectorizacion TF-IDF
+		tfidf = TfidfVectorizer(stop_words='english')
+		tfidf_matrix = tfidf.fit_transform(comments_grouped['comment'])
+		
+		# Similitud coseno producto vs. producto
+		cosine_sim      = cosine_similarity(tfidf_matrix, tfidf_matrix)
+		item_ids_unique = comments_grouped["item_id"].tolist()
+		similarity_df   = pd.DataFrame(cosine_sim,
+		index=item_ids_unique,
+		columns=item_ids_unique)
+		
+		# Modelado de topicos con LDA
+		lda        = LDA(n_components=5, random_state=42)
+		lda_matrix = lda.fit_transform(tfidf_matrix)
+		
+		# Serializacion
+		joblib.dump(tfidf,         f"{MODELS_DIR}/tfidf.pkl")
+		joblib.dump(similarity_df, f"{MODELS_DIR}/similarity_df.pkl")
+		joblib.dump(lda,           f"{MODELS_DIR}/lda.pkl")
+		joblib.dump(lda_matrix,    f"{MODELS_DIR}/lda_matrix.pkl")
+	\end{lstlisting}
+	
+	De forma paralela, se construye la matriz usuario-producto a partir de las
+	calificaciones y se calcula la similitud coseno entre usuarios, base del
+	componente de filtrado colaborativo. Adicionalmente, se calcula el promedio
+	de calificaciones por producto, utilizado en el \textit{rating\_score}:
+	
+	\begin{lstlisting}[language=Python, caption=Filtrado colaborativo y rating promedio en train.py]
+		# Matriz usuario-producto
+		rating_matrix = ratings.pivot_table(
+		index='user_id', columns='item_id', values='rating'
+		).fillna(0)
+		
+		# Similitud entre usuarios
+		user_sim = cosine_similarity(rating_matrix, rating_matrix)
+		
+		# Promedio de calificaciones por producto
+		rating_avg = ratings.groupby("item_id")["rating"].mean().reset_index()
+		rating_avg.rename(columns={"rating": "avg_rating"}, inplace=True)
+		
+		joblib.dump(rating_matrix, f"{MODELS_DIR}/rating_matrix.pkl")
+		joblib.dump(user_sim,      f"{MODELS_DIR}/user_sim.pkl")
+		joblib.dump(rating_avg,    f"{MODELS_DIR}/rating_avg.pkl")
+	\end{lstlisting}
+	
+	\paragraph{Clasificación de Sentimientos.}
+	Para capturar el tono de las opiniones de los usuarios más allá de la
+	calificación numérica, se entrena un modelo de aprendizaje profundo basado
+	en embeddings de palabras. Los comentarios se tokenizaron y convirtieron en
+	secuencias de enteros de longitud fija (100 tokens). Las etiquetas binarias
+	se derivan de las calificaciones: se considera positiva toda calificación
+	estrictamente mayor a 3. El modelo consiste en una capa de embeddings de
+	128 dimensiones, una capa de aplanamiento y una neurona de salida con
+	activación sigmoide:
+	
+	\begin{lstlisting}[language=Python, caption=Tokenización y entrenamiento del modelo de sentimientos en train.py]
+		# Tokenizacion
+		tokenizer = Tokenizer()
+		tokenizer.fit_on_texts(comments['comment'])
+		sequences  = tokenizer.texts_to_sequences(comments['comment'])
+		word_index = tokenizer.word_index
+		data       = pad_sequences(sequences, maxlen=100)
+		
+		# Etiquetas binarias
+		labels = np.array([
+		1 if r > 3 else 0
+		for r in ratings['rating'].head(len(data))
+		])
+		
+		# Arquitectura del modelo
+		model = Sequential([
+		Embedding(input_dim=len(word_index) + 1,
+		output_dim=128,
+		input_length=100),
+		Flatten(),
+		Dense(1, activation='sigmoid'),
+		])
+		model.compile(optimizer='adam',
+		loss='binary_crossentropy',
+		metrics=['accuracy'])
+		
+		# Entrenamiento
+		model.fit(data, labels,
+		epochs=10,
+		batch_size=32,
+		validation_split=0.2,
+		verbose=1)
+		
+		# Serializacion
+		model.save(f"{MODELS_DIR}/keras_model.keras")
+		with open(f"{MODELS_DIR}/tokenizer.pkl", "wb") as f:
+		pickle.dump(tokenizer, f)
+	\end{lstlisting}
+	
+	% ──────────────────────────────────────────────────────
+	\subsubsection{Paso 5: Integración de Geolocalización}
+	
+	La geolocalización constituye el factor contextual principal del sistema.
+	En \texttt{ALGORITMO\_PROPUESTO.py} se implementa la fórmula de Haversine
+	para calcular la distancia en kilómetros entre el usuario y cada producto,
+	considerando la curvatura de la Tierra. La función \texttt{add\_distance}
+	acepta coordenadas explícitas cuando éstas provienen del dispositivo móvil,
+	o bien las recupera del almacén de datos si no se proporcionan:
+	
+	\begin{lstlisting}[language=Python, caption=Cálculo de distancias geográficas en ALGORITMO\_PROPUESTO.py]
+		def haversine(lat1, lon1, lat2, lon2):
+		R    = 6371
+		dlat = np.radians(lat2 - lat1)
+		dlon = np.radians(lon2 - lon1)
+		a = (np.sin(dlat / 2) ** 2
+		+ np.cos(np.radians(lat1))
+		* np.cos(np.radians(lat2))
+		* np.sin(dlon / 2) ** 2)
+		c = 2 * np.arctan2(np.sqrt(a), np.sqrt(1-a))
+		return R * c
+		
+		
+		def add_distance(user_id, lat_usuario=None, lon_usuario=None):
+		if lat_usuario is not None and lon_usuario is not None:
+		u_lat, u_lon = lat_usuario, lon_usuario
+		else:
+		user_loc = locations[locations['user_id'] == user_id]
+		u_lat    = user_loc['latitude'].values[0]
+		u_lon    = user_loc['longitude'].values[0]
+		
+		distances = [
+		haversine(u_lat, u_lon, product['latitude'], product['longitude'])
+		for _, product in products.iterrows()
+		]
+		
+		products['distance'] = distances
+		
+		return u_lat, u_lon
+	\end{lstlisting}
+	
+	% ──────────────────────────────────────────────────────
+	\subsubsection{Paso 6: Generación de Recomendaciones}
+	
+	La función \texttt{recommend} en \texttt{ALGORITMO\_PROPUESTO.py} orquesta
+	todos los componentes anteriores. Calcula los tres scores parciales
+	(\textit{geo\_score}, \textit{rating\_score} y \textit{content\_score}),
+	los normaliza al rango $[0,1]$, los combina con ponderaciones fijas y
+	ordena los productos de mayor a menor score final. A cada resultado se le
+	asigna una etiqueta explicativa mediante \texttt{generate\_reason}, que
+	evalúa umbrales individuales por score para determinar las razones de
+	recomendación presentadas al usuario:
+	
+	\begin{lstlisting}[language=Python, caption=Función de recomendación híbrida en ALGORITMO\_PROPUESTO.py]
+		def recommend(user_id, lat_manual=None, lon_manual=None, top_n=5):
+		u_lat, u_lon = add_distance(user_id, lat_manual, lon_manual)
+		rec = products.copy()
+		
+		# Rating promedio
+		rec = rec.merge(rating_avg.drop_duplicates('item_id'),
+		on="item_id", how="left")
+		rec["avg_rating"] = rec["avg_rating"].fillna(0)
+		
+		# Scores parciales
+		rec["geo_score"]    = normalize_distance(rec["distance"])
+		rec["rating_score"] = normalize_rating(rec["avg_rating"])
+		
+		# TF-IDF score
+		rec["tfidf_score"] = [
+		similarity_df[i].mean()
+		if i in similarity_df.columns else 0
+		for i in rec["item_id"]
+		]
+		
+		# LDA score y sentiment score
+		lda_score, sentiment_score = compute_text_scores()
+		rec["lda_score"]       = rec.index.map(
+		lambda i: lda_score[i] if i < len(lda_score) else 0)
+		rec["sentiment_score"] = rec["item_id"].map(
+		sentiment_score).fillna(0)
+		
+		# Normalizacion
+		rec["tfidf_score"]     = normalize_rating(rec["tfidf_score"])
+		rec["lda_score"]       = normalize_rating(rec["lda_score"])
+		rec["sentiment_score"] = normalize_rating(rec["sentiment_score"])
+		
+		# Content score combinado
+		rec["content_score"] = (0.5 * rec["tfidf_score"]
+		+ 0.2 * rec["lda_score"]
+		+ 0.3 * rec["sentiment_score"])
+		
+		# Score final ponderado
+		rec["final_score"] = (0.40 * rec["geo_score"]
+		+ 0.25 * rec["rating_score"]
+		+ 0.35 * rec["content_score"])
+		
+		rec["reason"]   = rec.apply(generate_reason, axis=1)
+		rec             = rec.sort_values("final_score", ascending=False)
+		rec["distance"] = rec["distance"].apply(lambda x: f"{x:.2f} km")
+		
+		return rec[["name", "distance", "avg_rating", "reason"]].head(top_n)
+		
+		
+		def generate_reason(row):
+		reasons = []
+		try:
+		if float(row["geo_score"])     > 0.7:
+		reasons.append("Cerca de tu ubicacion")
+		if float(row["rating_score"])  > 0.6:
+		reasons.append("Muy bien calificado por usuarios")
+		if float(row["content_score"]) > 0.5:
+		reasons.append("Similar a productos populares")
+		except Exception as e:
+		print(f"Error en generate_reason: {e}")
+		return ", ".join(reasons) if reasons else "Recomendado por el sistema"
+	\end{lstlisting}
+	
+	Finalmente, \texttt{main.py} expone la función \texttt{recommend} como un
+	endpoint REST mediante FastAPI. El parámetro \texttt{limit} es opcional:
+	si no se proporciona, el sistema devuelve la totalidad de los productos
+	ordenados por score. Las coordenadas también son opcionales; de no
+	suministrarse, el sistema utiliza valores fijos correspondientes al centro
+	de la Ciudad de México como fallback:
+	
+	\begin{lstlisting}[language=Python, caption=Endpoint de recomendación en main.py]
+		app = FastAPI()
+		
 		@app.get("/recomendar/{user_id}")
-		def recomendar(user_id: int):
-		return modelo.recommend(user_id)
+		def obtener_recomendacion(
+		user_id: int,
+		lat: float = Query(None),
+		lon: float = Query(None),
+		limit: int = Query(None),
+		):
+		try:
+		mi_latitud  = lat if lat is not None else 19.4326
+		mi_longitud = lon if lon is not None else -99.1332
+		top_n       = limit if limit is not None else len(algoritmo.products)
+		
+		resultado = algoritmo.recommend(
+		user_id=user_id,
+		lat_manual=mi_latitud,
+		lon_manual=mi_longitud,
+		top_n=top_n,
+		)
+		return resultado.to_dict(orient='records')
+		
+		except Exception as e:
+		return {"error_interno": str(e), "tipo": str(type(e))}
+		
+		
+		@app.get("/")
+		def read_root():
+		return {
+			"status": "online",
+			"message": "API de Recomendacion Geolocalizada funcionando correctamente",
+			"version": "1.0.0",
+		}
 	\end{lstlisting}
 	
 	\subsection{Frontend}
 	
 	Descripción de la app móvil.
-	
-	% ======================================================
-	\section{Resultados}
-	
-	Tablas, métricas, análisis cuantitativo.
-	
-	% ======================================================
-	\section{Discusión}
-	
-	Interpretación de resultados y comparación con trabajos previos.
 	
 	% ======================================================
 	\section{Conclusiones}
