@@ -45,7 +45,7 @@
 \addbibresource{reporte.bib}
 
 % --- Rutas de imágenes ---
-\graphicspath{{../c4/container/}{../c4/context/}}
+\graphicspath{{../c4/container/}{../c4/context/}{../c4/components/}{../c4/code/}}
 
 % --- Imágenes Landscape ---
 \usepackage{pdflscape}
@@ -401,23 +401,97 @@
 	del proyecto, que es la validación técnica del sistema y no la evaluación
 	de su efectividad comercial.
 	
+	% ======================================================
 	\section{Arquitectura del Sistema}
 	
-	Modelo C4.
+	La arquitectura del sistema fue documentada siguiendo el modelo C4 propuesto
+	por Simon Brown, el cual organiza la descripción de un sistema de software en
+	cuatro niveles de abstracción progresiva: contexto, contenedores, componentes
+	y código. Este enfoque permite comunicar la estructura del sistema de forma
+	clara y graduada, adaptando el nivel de detalle al público al que se dirige
+	cada diagrama. A continuación se presentan los cuatro niveles aplicados al
+	Sistema de Recomendación Híbrido.
 	
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=\textwidth]{DiagramaContenedores-dark.png}
+		\includegraphics[width=\textwidth]{Contexto-dark.png}
+		\caption{Diagrama de contexto del sistema.}
+		\label{fig:Contexto}
+	\end{figure}
+	
+	El diagrama de contexto (Figura~\ref{fig:Contexto}) representa el nivel más
+	alto de abstracción y sitúa al sistema dentro de su entorno. Se identifican
+	dos actores externos: el \textbf{Usuario}, quien interactúa directamente con
+	la aplicación móvil para consultar recomendaciones de productos cercanos, y
+	el \textbf{Servicio GPS}, correspondiente al servicio de geolocalización
+	provisto por el sistema operativo del dispositivo, del cual el sistema obtiene
+	las coordenadas geográficas en tiempo real. El sistema principal actúa como
+	intermediario entre ambos, recibiendo la solicitud del usuario, enriqueciéndola
+	con información de ubicación y devolviendo una lista de recomendaciones
+	personalizadas.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=\textwidth]{Contenedores-dark.png}
 		\caption{Diagrama de contenedores del sistema.}
 		\label{fig:Contenedores}
 	\end{figure}
 	
+	El diagrama de contenedores (Figura~\ref{fig:Contenedores}) descompone el
+	sistema en sus unidades ejecutables y almacenes de datos. La
+	\textbf{Aplicación Móvil}, desarrollada en Flutter, constituye el punto de
+	entrada del usuario y se encarga de obtener la ubicación GPS, construir la
+	solicitud HTTP y presentar los resultados con paginación progresiva. El
+	\textbf{Backend + Algoritmo}, implementado con FastAPI sobre Python 3,
+	expone el endpoint de recomendación y orquesta la lógica de scoring. Dos
+	almacenes de datos complementan el sistema: el \textbf{Almacén de Datos},
+	compuesto por los archivos JSON sintéticos con usuarios, ubicaciones,
+	productos, calificaciones y comentarios, y los \textbf{Modelos Serializados},
+	que contienen los artefactos de aprendizaje automático generados durante el
+	entrenamiento y cargados en memoria al iniciar el servidor.
+	
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=\textwidth]{DiagramaContexto-dark.png}
-		\caption{Diagrama de contexto del sistema.}
-		\label{fig:Contexto}
+		\includegraphics[width=\textwidth]{Componentes-dark.png}
+		\caption{Diagrama de componentes del sistema.}
+		\label{fig:Componentes}
 	\end{figure}
+	
+	El diagrama de componentes (Figura~\ref{fig:Componentes}) detalla la
+	estructura interna del contenedor Backend + Algoritmo, mostrando las seis
+	unidades funcionales que lo componen. El \textbf{Endpoint de recomendación}
+	actúa como punto de entrada HTTP, valida los parámetros recibidos e invoca
+	los motores de cálculo. El \textbf{Cargador de Modelos} deserializa los
+	artefactos de ML al iniciar el servidor, evitando reentrenamientos en tiempo
+	de solicitud. Los motores \textbf{Geográfico}, \textbf{Colaborativo} y
+	\textbf{de Contenido} calculan de forma independiente el \textit{geo\_score},
+	el \textit{rating\_score} y el \textit{content\_score} respectivamente,
+	consultando tanto el almacén de datos como los modelos cargados. Finalmente,
+	el \textbf{Combinador de Scores} integra los tres valores parciales en un
+	score final ponderado, ordena los productos resultantes y genera las etiquetas
+	explicativas que se devuelven al usuario.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=\textwidth]{Codigo.png}
+		\caption{Diagrama de código del sistema.}
+		\label{fig:Codigo}
+	\end{figure}
+	
+	El diagrama de código (Figura~\ref{fig:Codigo}) presenta la estructura del
+	almacén de datos mediante un modelo entidad-relación, describiendo los cinco
+	archivos JSON que conforman el conjunto de datos sintético. La entidad
+	\textbf{User} se relaciona de forma uno a uno con \textbf{Location}, dado que
+	cada usuario cuenta con una única coordenada geográfica registrada. Tanto
+	\textbf{User} como \textbf{Product} mantienen una relación uno a muchos con
+	\textbf{Rating}, reflejando que un usuario puede calificar múltiples productos
+	y un producto puede recibir múltiples calificaciones. La entidad
+	\textbf{Comment} se asocia exclusivamente con \textbf{Product}, ya que el
+	conjunto de datos no registra la autoría de los comentarios a nivel de usuario.
+	Este modelo constituye la base sobre la cual operan los motores colaborativo y
+	de contenido del algoritmo de recomendación.
+	
+	
 	
 	% ======================================================
 	\section{Implementación}

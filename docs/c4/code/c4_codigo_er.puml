@@ -1,0 +1,84 @@
+@startuml C4_Codigo_ER
+!theme plain
+title Diagrama de Código – Entidad-Relación del Almacén de Datos\nSistema de Recomendación Híbrido
+
+skinparam linetype ortho
+skinparam EntityBackgroundColor #FFF8E1
+skinparam EntityBorderColor #E65100
+skinparam EntityFontSize 13
+skinparam ArrowColor #555555
+skinparam ArrowFontSize 11
+skinparam ArrowFontColor #333333
+skinparam NoteFontSize 11
+
+' ── Entidades ────────────────────────────────────────────
+
+entity "User\n(users.json)" as User {
+    * user_id : integer <<PK>>
+}
+
+entity "Location\n(locations.json)" as Location {
+    * user_id  : integer <<FK>>
+    --
+    latitude  : float
+    longitude : float
+}
+
+entity "Product\n(products.json)" as Product {
+    * item_id   : integer <<PK>>
+    --
+    name      : string
+    latitude  : float
+    longitude : float
+}
+
+entity "Rating\n(ratings.json)" as Rating {
+    * user_id   : integer <<FK>>
+    * item_id   : integer <<FK>>
+    --
+    rating    : integer  ' 1 – 5
+    timestamp : integer  ' Unix epoch
+}
+
+entity "Comment\n(comments.json)" as Comment {
+    * item_id  : integer <<FK>>
+    --
+    comment : string
+}
+
+' ── Notas de volumen ─────────────────────────────────────
+
+note right of User
+  60 registros
+end note
+
+note right of Location
+  60 registros
+  Zona: lat [19.2, 19.6]
+  Zona: lon [-99.4, -98.9]
+end note
+
+note right of Product
+  150 registros
+  20 categorías × sufijo numérico
+  item_id = 101 … 250
+end note
+
+note right of Rating
+  900 registros
+  Distribución uniforme discreta
+end note
+
+note right of Comment
+  250 registros
+  10 plantillas de texto
+end note
+
+' ── Relaciones ───────────────────────────────────────────
+
+User        ||--||    Location : "tiene una\nubicación"
+User        ||--o{    Rating   : "otorga"
+Product     ||--o{    Rating   : "recibe"
+Product     ||--o{    Comment  : "tiene"
+
+@enduml
