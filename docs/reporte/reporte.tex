@@ -905,9 +905,371 @@
 		}
 	\end{lstlisting}
 	
+	% ======================================================
 	\subsection{Frontend}
 	
-	Descripción de la app móvil.
+	La aplicación móvil fue desarrollada en Flutter utilizando el lenguaje Dart.
+	Todo el código de la interfaz se concentra en el archivo \texttt{main.dart},
+	que define la estructura visual, la lógica de estado y la comunicación con
+	el backend. A continuación se documenta siguiendo el mismo flujo de seis
+	pasos del backend.
+	
+	% ──────────────────────────────────────────────────────
+	\subsubsection{Paso 1: Instalación de Bibliotecas Necesarias}
+	
+	Flutter gestiona sus dependencias a través del archivo \texttt{pubspec.yaml}.
+	Los paquetes externos utilizados son \texttt{geolocator}, para acceder al
+	servicio GPS del dispositivo, y \texttt{http}, para realizar solicitudes
+	HTTP al backend. Ambos se declaran bajo la sección \texttt{dependencies} y
+	se instalan ejecutando el comando correspondiente:
+	
+	\begin{lstlisting}[language=bash, caption=Instalación de dependencias en Flutter]
+		flutter pub get
+	\end{lstlisting}
+	
+	Las dependencias relevantes en \texttt{pubspec.yaml} son las siguientes:
+	
+	\begin{lstlisting}[caption=Dependencias en pubspec.yaml]
+		dependencies:
+		  flutter:
+		    sdk: flutter
+		    http: ^1.6.0
+		    geolocator: ^14.0.2
+		
+		environment:
+		  sdk: ^3.10.3
+	\end{lstlisting}
+	
+	% ──────────────────────────────────────────────────────
+	\subsubsection{Paso 2: Importación de Bibliotecas}
+	
+	Al inicio de \texttt{main.dart} se importan los paquetes necesarios para
+	la construcción de la interfaz, la comunicación HTTP, el acceso al GPS y
+	la decodificación de respuestas JSON:
+	
+	\begin{lstlisting}[language=Java, caption=Importaciones en main.dart]
+		import 'package:flutter/material.dart';
+		import 'package:http/http.dart' as http;
+		import 'package:geolocator/geolocator.dart';
+		import 'dart:convert';
+	\end{lstlisting}
+	
+	% ──────────────────────────────────────────────────────
+	\subsubsection{Paso 3: Configuración Inicial de la Aplicación}
+	
+	El punto de entrada de la aplicación es la función \texttt{main}, que
+	instancia el widget raíz \texttt{MyApp}. Este widget configura el tema
+	visual global, desactiva el banner de depuración y establece
+	\texttt{RecsPage} como pantalla principal. \texttt{RecsPage} es un widget
+	con estado (\texttt{StatefulWidget}), lo que permite actualizar la interfaz
+	en respuesta a cambios en los datos:
+	
+	\begin{lstlisting}[language=Java, caption=Punto de entrada y configuración de la app]
+		void main() => runApp(const MyApp());
+		
+		class MyApp extends StatelessWidget {
+			const MyApp({super.key});
+			
+			@override
+			Widget build(BuildContext context) {
+				return MaterialApp(
+				debugShowCheckedModeBanner: false,
+				title: 'Recomendador GPS',
+				theme: ThemeData(
+				primarySwatch: Colors.indigo,
+				useMaterial3: true,
+				),
+				home: const RecsPage(),
+				);
+			}
+		}
+	\end{lstlisting}
+	
+	% ──────────────────────────────────────────────────────
+	\subsubsection{Paso 4: Gestión de Estado y Paginación}
+	
+	El estado de la aplicación se administra dentro de la clase  \texttt{\_RecsPageState}.
+	Se mantienen dos listas diferenciadas: \texttt{\_allRecommendations},
+	que almacena la totalidad de los resultados recibidos del backend, y
+	\texttt{\_visibleRecommendations}, que contiene únicamente los elementos
+	visibles en pantalla en cada momento. La paginación progresiva se implementa
+	mediante un \texttt{ScrollController} que detecta cuando el usuario se
+	aproxima al final de la lista y carga el siguiente bloque de diez elementos:
+	
+	\begin{lstlisting}[language=Java, caption=Estado y lógica de paginación en \_RecsPageState]
+		List _allRecommendations    = [];
+		List _visibleRecommendations = [];
+		static const int _pageSize  = 10;
+		bool _isLoading     = false;
+		bool _isLoadingMore = false;
+		String _statusMessage = "Busca un producto por nombre";
+		
+		final TextEditingController _searchController = TextEditingController();
+		final ScrollController _scrollController = ScrollController();
+		
+		@override
+		void initState() {
+			super.initState();
+			_scrollController.addListener(_onScroll);
+		}
+		
+		void _onScroll() {
+			if (_scrollController.position.pixels >=
+			_scrollController.position.maxScrollExtent - 200) {
+				_loadMore();
+			}
+		}
+		
+		void _loadMore() {
+			if (_isLoadingMore) return;
+			if (_visibleRecommendations.length >= _allRecommendations.length) return;
+			
+			setState(() => _isLoadingMore = true);
+			final nextEnd = (_visibleRecommendations.length + _pageSize)
+			.clamp(0, _allRecommendations.length);
+			
+			Future.delayed(const Duration(milliseconds: 300), () {
+				if (!mounted) return;
+				setState(() {
+					_visibleRecommendations = _allRecommendations.sublist(0, nextEnd);
+					_isLoadingMore = false;
+				});
+			});
+		}
+	\end{lstlisting}
+	
+	El filtrado por texto se aplica sobre la lista completa y reinicia la
+	paginación al primer bloque, de modo que la búsqueda no requiere una nueva
+	llamada al servidor:
+	
+	\begin{lstlisting}[language=Java, caption=Filtrado en tiempo real con reinicio de paginación]
+		void _applyFilter(String query) {
+			final base = query.isEmpty
+			? List.from(_allRecommendations)
+			: _allRecommendations
+			.where((item) => item['name']
+			.toString()
+			.toLowerCase()
+			.contains(query.toLowerCase()))
+			.toList();
+			
+			_allRecommendations     = base;
+			_visibleRecommendations = base.take(_pageSize).toList();
+			
+			_statusMessage = query.isEmpty
+			? "Cerca de ti:"
+			: base.isEmpty
+			? "Sin resultados para \"$query\""
+			: "Resultados para \"$query\" (${base.length}):";
+		}
+	\end{lstlisting}
+	
+	% ──────────────────────────────────────────────────────
+	\subsubsection{Paso 5: Integración de Geolocalización y Comunicación con el Backend}
+	
+	La función \texttt{\_getRecommendations} coordina la obtención de
+	coordenadas GPS y la solicitud al backend. Primero verifica y solicita los
+	permisos de ubicación del dispositivo; una vez obtenidos, recupera la
+	posición actual con alta precisión y construye la URL del endpoint
+	incluyendo latitud y longitud como parámetros de consulta. La respuesta
+	se decodifica como JSON y se valida para distinguir entre una lista de
+	recomendaciones válida y un objeto de error retornado por el servidor:
+	
+	\begin{lstlisting}[language=Java, caption=Obtención de GPS y solicitud al backend]
+		Future<void> _getRecommendations() async {
+			final query = _searchController.text.trim();
+			setState(() {
+				_isLoading     = true;
+				_statusMessage = "Obteniendo ubicacion...";
+			});
+			
+			try {
+				LocationPermission permission = await Geolocator.checkPermission();
+				if (permission == LocationPermission.denied) {
+					permission = await Geolocator.requestPermission();
+				}
+				
+				Position position = await Geolocator.getCurrentPosition(
+				desiredAccuracy: LocationAccuracy.high,
+				);
+				
+				setState(() => _statusMessage = "Consultando Algoritmo...");
+				
+				final url =
+				'https://app-recomendacion-geolocalizada.onrender.com'
+				'/recomendar/1'
+				'?lat=${position.latitude}&lon=${position.longitude}';
+				
+				final response = await http.get(Uri.parse(url));
+				
+				if (response.statusCode == 200) {
+					final decodedData = json.decode(response.body);
+					setState(() {
+						if (decodedData is List) {
+							_allRecommendations = decodedData;
+							_applyFilter(query);
+						} else if (decodedData is Map &&
+						decodedData.containsKey('error_interno')) {
+							_statusMessage          = "Error: ${decodedData['error_interno']}";
+							_allRecommendations     = [];
+							_visibleRecommendations = [];
+						} else {
+							_statusMessage = "Respuesta inesperada del servidor";
+						}
+						_isLoading = false;
+					});
+				} else {
+					setState(() {
+						_isLoading     = false;
+						_statusMessage = "Error servidor: ${response.statusCode}";
+					});
+				}
+			} catch (e) {
+				setState(() {
+					_isLoading     = false;
+					_statusMessage = "Error de conexion: $e";
+				});
+			}
+		}
+	\end{lstlisting}
+	
+	% ──────────────────────────────────────────────────────
+	\subsubsection{Paso 6: Construcción de la Interfaz de Usuario}
+	
+	La interfaz se construye dentro del método \texttt{build} y se organiza
+	en tres secciones verticales: la barra de búsqueda con el botón GPS, el
+	mensaje de estado y la lista de resultados con paginación.
+	
+	La barra de búsqueda combina un \texttt{TextField} con filtrado en tiempo
+	real y un \texttt{ElevatedButton} con ícono de GPS. El campo incluye un
+	botón de limpieza que aparece dinámicamente cuando hay texto ingresado:
+	
+	\begin{lstlisting}[language=Java, caption=Barra de búsqueda y botón GPS]
+		Row(
+		children: [
+		Expanded(
+		child: TextField(
+		controller: _searchController,
+		textInputAction: TextInputAction.search,
+		onSubmitted: (_) => _getRecommendations(),
+		onChanged: (value) {
+			if (_allRecommendations.isNotEmpty) {
+				setState(() => _applyFilter(value));
+			}
+		},
+		decoration: InputDecoration(
+		hintText: 'Buscar producto...',
+		prefixIcon: const Icon(Icons.search, color: Colors.indigo),
+		suffixIcon: _searchController.text.isNotEmpty
+		? IconButton(
+		icon: const Icon(Icons.clear, color: Colors.grey),
+		onPressed: () {
+			_searchController.clear();
+			setState(() => _applyFilter(''));
+		},
+		)
+		: null,
+		),
+		),
+		),
+		const SizedBox(width: 10),
+		ElevatedButton(
+		onPressed: _isLoading ? null : _getRecommendations,
+		child: const Icon(Icons.gps_fixed),
+		),
+		],
+		)
+	\end{lstlisting}
+	
+	La lista de resultados se construye con un \texttt{ListView.builder} que
+	renderiza únicamente los elementos visibles en pantalla. El último elemento
+	de la lista actúa como indicador de estado: muestra un
+	\texttt{CircularProgressIndicator} mientras se carga el siguiente bloque,
+	y un mensaje de fin de lista cuando todos los resultados han sido mostrados.
+	Cada producto se presenta en una tarjeta que incluye nombre, distancia,
+	calificación promedio y etiquetas de razón de recomendación:
+	
+	\begin{lstlisting}[language=Java, caption=Lista de resultados con paginación progresiva]
+		ListView.builder(
+		controller: _scrollController,
+		itemCount: _visibleRecommendations.length + 1,
+		itemBuilder: (context, index) {
+			// Indicador al pie de la lista
+			if (index == _visibleRecommendations.length) {
+				if (_isLoadingMore) {
+					return const Padding(
+					padding: EdgeInsets.all(16),
+					child: Center(child: CircularProgressIndicator()),
+					);
+				}
+				if (_visibleRecommendations.length >= _allRecommendations.length) {
+					return Padding(
+					padding: const EdgeInsets.all(16),
+					child: Center(
+					child: Text(
+					"-- ${_allRecommendations.length} resultados en total --",
+					style: const TextStyle(color: Colors.grey, fontSize: 12),
+					),
+					),
+					);
+				}
+				return const SizedBox.shrink();
+			}
+			
+			// Tarjeta de producto
+			final item   = _visibleRecommendations[index];
+			final rating = double.tryParse(item['avg_rating'].toString()) ?? 0.0;
+			
+			return Card(
+			elevation: 3,
+			margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+			shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+			child: ListTile(
+			leading: CircleAvatar(
+			backgroundColor: Colors.indigo.withOpacity(0.1),
+			child: const Icon(Icons.shopping_bag, color: Colors.indigo),
+			),
+			title: Text(item['name'],
+			style: const TextStyle(fontWeight: FontWeight.bold)),
+			subtitle: Column(
+			crossAxisAlignment: CrossAxisAlignment.start,
+			children: [
+			Row(children: [
+			const Icon(Icons.location_on, size: 14, color: Colors.red),
+			Text(" ${item['distance']}"),
+			const SizedBox(width: 15),
+			const Icon(Icons.star, size: 14, color: Colors.amber),
+			Text(" ${rating.toStringAsFixed(1)}"),
+			]),
+			const SizedBox(height: 8),
+			Wrap(
+			spacing: 5,
+			children: (item['reason'] as String)
+			.split(',')
+			.map<String>((r) => r.trim())
+			.where((r) => r.isNotEmpty)
+			.map<Widget>((r) => Container(
+			padding: const EdgeInsets.symmetric(
+			horizontal: 8, vertical: 2),
+			decoration: BoxDecoration(
+			color: Colors.green.withOpacity(0.1),
+			borderRadius: BorderRadius.circular(10),
+			border: Border.all(
+			color: Colors.green.withOpacity(0.3)),
+			),
+			child: Text("\checkmark\ $r",
+			style: const TextStyle(
+			fontSize: 10, color: Colors.green)),
+			))
+			.toList(),
+			),
+			],
+			),
+			),
+			);
+		},
+		)
+	\end{lstlisting}
 	
 	% ======================================================
 	\section{Conclusiones}
