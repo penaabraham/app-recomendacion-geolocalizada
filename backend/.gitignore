@@ -1,0 +1,6 @@
+venv_train/
+venv*/
+__pycache__/
+*.pyc
+*.pyo
+.env
