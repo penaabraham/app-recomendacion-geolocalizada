@@ -330,7 +330,7 @@
 	para la obtención de coordenadas GPS y \texttt{http} para la comunicación
 	con el backend.
 	
-	En el \textbf{backend} se empleó \texttt{FastAPI 0.110.0} sobre Python 3,
+	En el \textbf{backend} se empleó \texttt{FastAPI 0.110.0} sobre Python 3.12.8,
 	servido mediante \texttt{uvicorn 0.28.0}. Su sistema de tipado mediante
 	anotaciones permite la validación automática de parámetros de entrada y la
 	generación de documentación interactiva, lo que facilitó las pruebas durante
@@ -369,8 +369,9 @@
 		\item \texttt{locations.json}: 60 registros de coordenadas geográficas,
 		vinculados a cada usuario mediante \texttt{user\_id}. Los valores de
 		latitud y longitud se generaron de forma aleatoria uniforme dentro de
-		los rangos $[19.2,\ 19.6]$ y $[-99.4,\ -98.9]$ respectivamente,
-		correspondientes a una zona de la región centro de México.
+		los rangos $[19.9577,\ 20.1431]$ y $[-98.8061,\ -98.6776]$ respectivamente,
+		correspondientes a un área del estado de Hidalgo que comprende parte de
+		la ciudad de Pachuca de Soto y del municipio de Zempoala.
 		
 		\item \texttt{products.json}: 150 productos con campos \texttt{item\_id},
 		\texttt{name} y coordenadas geográficas distribuidas en la misma zona
@@ -866,8 +867,8 @@
 	endpoint REST mediante FastAPI. El parámetro \texttt{limit} es opcional:
 	si no se proporciona, el sistema devuelve la totalidad de los productos
 	ordenados por score. Las coordenadas también son opcionales; de no
-	suministrarse, el sistema utiliza valores fijos correspondientes al centro
-	de la Ciudad de México como fallback:
+	suministrarse, el sistema utiliza valores fijos correspondientes  al centro
+	del centro de Pachuca de Soto, Hidalgo, como fallback:
 	
 	\begin{lstlisting}[language=Python, caption=Endpoint de recomendación en main.py]
 		app = FastAPI()
@@ -880,8 +881,8 @@
 		limit: int = Query(None),
 		):
 		try:
-		mi_latitud  = lat if lat is not None else 19.4326
-		mi_longitud = lon if lon is not None else -99.1332
+		mi_latitud  = lat if lat is not None else 20.0671
+		mi_longitud = lon if lon is not None else -98.7302
 		top_n       = limit if limit is not None else len(algoritmo.products)
 		
 		resultado = algoritmo.recommend(
