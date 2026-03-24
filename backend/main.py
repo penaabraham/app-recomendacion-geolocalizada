@@ -13,8 +13,8 @@ def obtener_recomendacion(
 ):
     try:
         # 2. Definimos coordenadas: si vienen del celular se usan, si no, valores fijos
-        mi_latitud = lat if lat is not None else 19.4326  
-        mi_longitud = lon if lon is not None else -99.1332
+        mi_latitud  = lat if lat is not None else 20.0671
+        mi_longitud = lon if lon is not None else -98.7302
 
         # 3. Llamamos a la función de tu algoritmo (3 parámetros)
         resultado = algoritmo.recommend(
