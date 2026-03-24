@@ -1,62 +1,646 @@
 [
   {
-    "item_id":223,
-    "comment":"Buena relaci\u00f3n calidad precio"
+    "item_id":208,
+    "comment":"Gran producto para el d\u00eda a d\u00eda"
   },
   {
-    "item_id":190,
-    "comment":"No cumpli\u00f3 mis expectativas"
+    "item_id":238,
+    "comment":"Gran producto para el d\u00eda a d\u00eda"
   },
   {
-    "item_id":101,
-    "comment":"Funciona perfectamente"
-  },
-  {
-    "item_id":243,
-    "comment":"Excelente producto, muy recomendable"
-  },
-  {
-    "item_id":131,
-    "comment":"Cumple con lo esperado"
-  },
-  {
-    "item_id":165,
+    "item_id":127,
     "comment":"No lo volver\u00eda a comprar"
   },
   {
-    "item_id":201,
-    "comment":"No cumpli\u00f3 mis expectativas"
+    "item_id":138,
+    "comment":"Me gust\u00f3 mucho este producto"
   },
   {
-    "item_id":188,
-    "comment":"No cumpli\u00f3 mis expectativas"
+    "item_id":148,
+    "comment":"Me gust\u00f3 mucho este producto"
   },
   {
-    "item_id":247,
-    "comment":"No lo volver\u00eda a comprar"
-  },
-  {
-    "item_id":174,
-    "comment":"Cumple con lo esperado"
-  },
-  {
-    "item_id":174,
+    "item_id":163,
     "comment":"Muy buena compra"
   },
   {
-    "item_id":231,
+    "item_id":164,
     "comment":"No cumpli\u00f3 mis expectativas"
   },
   {
-    "item_id":249,
-    "comment":"No cumpli\u00f3 mis expectativas"
+    "item_id":139,
+    "comment":"Buena relaci\u00f3n calidad precio"
   },
   {
-    "item_id":109,
-    "comment":"Excelente producto, muy recomendable"
+    "item_id":171,
+    "comment":"Podr\u00eda ser mejor"
+  },
+  {
+    "item_id":224,
+    "comment":"Funciona perfectamente"
+  },
+  {
+    "item_id":182,
+    "comment":"Cumple con lo esperado"
+  },
+  {
+    "item_id":151,
+    "comment":"Cumple con lo esperado"
+  },
+  {
+    "item_id":154,
+    "comment":"Gran producto para el d\u00eda a d\u00eda"
+  },
+  {
+    "item_id":185,
+    "comment":"No lo volver\u00eda a comprar"
+  },
+  {
+    "item_id":128,
+    "comment":"Cumple con lo esperado"
+  },
+  {
+    "item_id":166,
+    "comment":"Muy buena compra"
+  },
+  {
+    "item_id":105,
+    "comment":"Cumple con lo esperado"
+  },
+  {
+    "item_id":120,
+    "comment":"Funciona perfectamente"
+  },
+  {
+    "item_id":171,
+    "comment":"Cumple con lo esperado"
+  },
+  {
+    "item_id":180,
+    "comment":"Podr\u00eda ser mejor"
+  },
+  {
+    "item_id":177,
+    "comment":"Gran producto para el d\u00eda a d\u00eda"
+  },
+  {
+    "item_id":205,
+    "comment":"Me gust\u00f3 mucho este producto"
+  },
+  {
+    "item_id":146,
+    "comment":"Buena relaci\u00f3n calidad precio"
+  },
+  {
+    "item_id":152,
+    "comment":"Muy buena compra"
   },
   {
     "item_id":140,
+    "comment":"Me gust\u00f3 mucho este producto"
+  },
+  {
+    "item_id":122,
+    "comment":"Podr\u00eda ser mejor"
+  },
+  {
+    "item_id":224,
+    "comment":"Gran producto para el d\u00eda a d\u00eda"
+  },
+  {
+    "item_id":159,
+    "comment":"Cumple con lo esperado"
+  },
+  {
+    "item_id":150,
+    "comment":"Gran producto para el d\u00eda a d\u00eda"
+  },
+  {
+    "item_id":194,
+    "comment":"Gran producto para el d\u00eda a d\u00eda"
+  },
+  {
+    "item_id":193,
+    "comment":"No lo volver\u00eda a comprar"
+  },
+  {
+    "item_id":130,
+    "comment":"Me gust\u00f3 mucho este producto"
+  },
+  {
+    "item_id":219,
+    "comment":"Cumple con lo esperado"
+  },
+  {
+    "item_id":173,
+    "comment":"Podr\u00eda ser mejor"
+  },
+  {
+    "item_id":143,
+    "comment":"Muy buena compra"
+  },
+  {
+    "item_id":119,
+    "comment":"No lo volver\u00eda a comprar"
+  },
+  {
+    "item_id":181,
+    "comment":"Excelente producto, muy recomendable"
+  },
+  {
+    "item_id":211,
+    "comment":"Gran producto para el d\u00eda a d\u00eda"
+  },
+  {
+    "item_id":149,
+    "comment":"Cumple con lo esperado"
+  },
+  {
+    "item_id":133,
+    "comment":"Funciona perfectamente"
+  },
+  {
+    "item_id":173,
+    "comment":"Excelente producto, muy recomendable"
+  },
+  {
+    "item_id":158,
+    "comment":"No cumpli\u00f3 mis expectativas"
+  },
+  {
+    "item_id":248,
+    "comment":"No cumpli\u00f3 mis expectativas"
+  },
+  {
+    "item_id":107,
+    "comment":"Podr\u00eda ser mejor"
+  },
+  {
+    "item_id":149,
+    "comment":"Gran producto para el d\u00eda a d\u00eda"
+  },
+  {
+    "item_id":180,
+    "comment":"No lo volver\u00eda a comprar"
+  },
+  {
+    "item_id":101,
+    "comment":"Excelente producto, muy recomendable"
+  },
+  {
+    "item_id":109,
+    "comment":"Funciona perfectamente"
+  },
+  {
+    "item_id":238,
+    "comment":"Excelente producto, muy recomendable"
+  },
+  {
+    "item_id":177,
+    "comment":"Excelente producto, muy recomendable"
+  },
+  {
+    "item_id":172,
+    "comment":"Podr\u00eda ser mejor"
+  },
+  {
+    "item_id":246,
+    "comment":"No lo volver\u00eda a comprar"
+  },
+  {
+    "item_id":160,
+    "comment":"Podr\u00eda ser mejor"
+  },
+  {
+    "item_id":144,
+    "comment":"No lo volver\u00eda a comprar"
+  },
+  {
+    "item_id":177,
+    "comment":"Cumple con lo esperado"
+  },
+  {
+    "item_id":134,
+    "comment":"Me gust\u00f3 mucho este producto"
+  },
+  {
+    "item_id":231,
+    "comment":"Muy buena compra"
+  },
+  {
+    "item_id":184,
+    "comment":"No cumpli\u00f3 mis expectativas"
+  },
+  {
+    "item_id":172,
+    "comment":"Cumple con lo esperado"
+  },
+  {
+    "item_id":106,
+    "comment":"Podr\u00eda ser mejor"
+  },
+  {
+    "item_id":215,
+    "comment":"Podr\u00eda ser mejor"
+  },
+  {
+    "item_id":115,
+    "comment":"Funciona perfectamente"
+  },
+  {
+    "item_id":224,
+    "comment":"Gran producto para el d\u00eda a d\u00eda"
+  },
+  {
+    "item_id":111,
+    "comment":"No cumpli\u00f3 mis expectativas"
+  },
+  {
+    "item_id":144,
+    "comment":"Muy buena compra"
+  },
+  {
+    "item_id":206,
+    "comment":"Buena relaci\u00f3n calidad precio"
+  },
+  {
+    "item_id":247,
+    "comment":"Gran producto para el d\u00eda a d\u00eda"
+  },
+  {
+    "item_id":144,
+    "comment":"Cumple con lo esperado"
+  },
+  {
+    "item_id":137,
+    "comment":"No lo volver\u00eda a comprar"
+  },
+  {
+    "item_id":119,
+    "comment":"Gran producto para el d\u00eda a d\u00eda"
+  },
+  {
+    "item_id":180,
+    "comment":"Buena relaci\u00f3n calidad precio"
+  },
+  {
+    "item_id":166,
+    "comment":"Gran producto para el d\u00eda a d\u00eda"
+  },
+  {
+    "item_id":166,
+    "comment":"Me gust\u00f3 mucho este producto"
+  },
+  {
+    "item_id":136,
+    "comment":"Podr\u00eda ser mejor"
+  },
+  {
+    "item_id":180,
+    "comment":"Me gust\u00f3 mucho este producto"
+  },
+  {
+    "item_id":126,
+    "comment":"Cumple con lo esperado"
+  },
+  {
+    "item_id":231,
+    "comment":"Funciona perfectamente"
+  },
+  {
+    "item_id":166,
+    "comment":"No lo volver\u00eda a comprar"
+  },
+  {
+    "item_id":184,
+    "comment":"Cumple con lo esperado"
+  },
+  {
+    "item_id":124,
+    "comment":"Excelente producto, muy recomendable"
+  },
+  {
+    "item_id":194,
+    "comment":"Funciona perfectamente"
+  },
+  {
+    "item_id":185,
+    "comment":"Funciona perfectamente"
+  },
+  {
+    "item_id":246,
+    "comment":"Funciona perfectamente"
+  },
+  {
+    "item_id":229,
+    "comment":"No cumpli\u00f3 mis expectativas"
+  },
+  {
+    "item_id":182,
+    "comment":"Cumple con lo esperado"
+  },
+  {
+    "item_id":166,
+    "comment":"Excelente producto, muy recomendable"
+  },
+  {
+    "item_id":177,
+    "comment":"Cumple con lo esperado"
+  },
+  {
+    "item_id":177,
+    "comment":"Cumple con lo esperado"
+  },
+  {
+    "item_id":217,
+    "comment":"Funciona perfectamente"
+  },
+  {
+    "item_id":158,
+    "comment":"Cumple con lo esperado"
+  },
+  {
+    "item_id":160,
+    "comment":"Podr\u00eda ser mejor"
+  },
+  {
+    "item_id":186,
+    "comment":"Funciona perfectamente"
+  },
+  {
+    "item_id":145,
+    "comment":"Muy buena compra"
+  },
+  {
+    "item_id":128,
+    "comment":"Funciona perfectamente"
+  },
+  {
+    "item_id":187,
+    "comment":"Excelente producto, muy recomendable"
+  },
+  {
+    "item_id":148,
+    "comment":"Cumple con lo esperado"
+  },
+  {
+    "item_id":196,
+    "comment":"Buena relaci\u00f3n calidad precio"
+  },
+  {
+    "item_id":197,
+    "comment":"No cumpli\u00f3 mis expectativas"
+  },
+  {
+    "item_id":176,
+    "comment":"Cumple con lo esperado"
+  },
+  {
+    "item_id":219,
+    "comment":"Gran producto para el d\u00eda a d\u00eda"
+  },
+  {
+    "item_id":229,
+    "comment":"Gran producto para el d\u00eda a d\u00eda"
+  },
+  {
+    "item_id":232,
+    "comment":"Buena relaci\u00f3n calidad precio"
+  },
+  {
+    "item_id":196,
+    "comment":"No cumpli\u00f3 mis expectativas"
+  },
+  {
+    "item_id":104,
+    "comment":"Gran producto para el d\u00eda a d\u00eda"
+  },
+  {
+    "item_id":232,
+    "comment":"Excelente producto, muy recomendable"
+  },
+  {
+    "item_id":171,
+    "comment":"Funciona perfectamente"
+  },
+  {
+    "item_id":217,
+    "comment":"Gran producto para el d\u00eda a d\u00eda"
+  },
+  {
+    "item_id":119,
+    "comment":"No cumpli\u00f3 mis expectativas"
+  },
+  {
+    "item_id":117,
+    "comment":"No lo volver\u00eda a comprar"
+  },
+  {
+    "item_id":244,
+    "comment":"Cumple con lo esperado"
+  },
+  {
+    "item_id":113,
+    "comment":"No cumpli\u00f3 mis expectativas"
+  },
+  {
+    "item_id":185,
+    "comment":"Funciona perfectamente"
+  },
+  {
+    "item_id":109,
+    "comment":"No cumpli\u00f3 mis expectativas"
+  },
+  {
+    "item_id":210,
+    "comment":"Podr\u00eda ser mejor"
+  },
+  {
+    "item_id":183,
+    "comment":"Cumple con lo esperado"
+  },
+  {
+    "item_id":186,
+    "comment":"Excelente producto, muy recomendable"
+  },
+  {
+    "item_id":244,
+    "comment":"Podr\u00eda ser mejor"
+  },
+  {
+    "item_id":243,
+    "comment":"Cumple con lo esperado"
+  },
+  {
+    "item_id":228,
+    "comment":"Buena relaci\u00f3n calidad precio"
+  },
+  {
+    "item_id":204,
+    "comment":"Cumple con lo esperado"
+  },
+  {
+    "item_id":238,
+    "comment":"No cumpli\u00f3 mis expectativas"
+  },
+  {
+    "item_id":122,
+    "comment":"No lo volver\u00eda a comprar"
+  },
+  {
+    "item_id":164,
+    "comment":"No cumpli\u00f3 mis expectativas"
+  },
+  {
+    "item_id":116,
+    "comment":"Gran producto para el d\u00eda a d\u00eda"
+  },
+  {
+    "item_id":143,
+    "comment":"No cumpli\u00f3 mis expectativas"
+  },
+  {
+    "item_id":110,
+    "comment":"Buena relaci\u00f3n calidad precio"
+  },
+  {
+    "item_id":153,
+    "comment":"Podr\u00eda ser mejor"
+  },
+  {
+    "item_id":249,
+    "comment":"Me gust\u00f3 mucho este producto"
+  },
+  {
+    "item_id":173,
+    "comment":"Gran producto para el d\u00eda a d\u00eda"
+  },
+  {
+    "item_id":236,
+    "comment":"Excelente producto, muy recomendable"
+  },
+  {
+    "item_id":180,
+    "comment":"Funciona perfectamente"
+  },
+  {
+    "item_id":116,
+    "comment":"Excelente producto, muy recomendable"
+  },
+  {
+    "item_id":121,
+    "comment":"Podr\u00eda ser mejor"
+  },
+  {
+    "item_id":154,
+    "comment":"Podr\u00eda ser mejor"
+  },
+  {
+    "item_id":173,
+    "comment":"No cumpli\u00f3 mis expectativas"
+  },
+  {
+    "item_id":235,
+    "comment":"Buena relaci\u00f3n calidad precio"
+  },
+  {
+    "item_id":124,
+    "comment":"Buena relaci\u00f3n calidad precio"
+  },
+  {
+    "item_id":210,
+    "comment":"Podr\u00eda ser mejor"
+  },
+  {
+    "item_id":218,
+    "comment":"Cumple con lo esperado"
+  },
+  {
+    "item_id":245,
+    "comment":"Gran producto para el d\u00eda a d\u00eda"
+  },
+  {
+    "item_id":182,
+    "comment":"Me gust\u00f3 mucho este producto"
+  },
+  {
+    "item_id":175,
+    "comment":"Excelente producto, muy recomendable"
+  },
+  {
+    "item_id":230,
+    "comment":"Funciona perfectamente"
+  },
+  {
+    "item_id":250,
+    "comment":"No cumpli\u00f3 mis expectativas"
+  },
+  {
+    "item_id":102,
+    "comment":"Excelente producto, muy recomendable"
+  },
+  {
+    "item_id":188,
+    "comment":"Me gust\u00f3 mucho este producto"
+  },
+  {
+    "item_id":185,
+    "comment":"Me gust\u00f3 mucho este producto"
+  },
+  {
+    "item_id":207,
+    "comment":"Cumple con lo esperado"
+  },
+  {
+    "item_id":224,
+    "comment":"No lo volver\u00eda a comprar"
+  },
+  {
+    "item_id":133,
+    "comment":"Buena relaci\u00f3n calidad precio"
+  },
+  {
+    "item_id":104,
+    "comment":"No cumpli\u00f3 mis expectativas"
+  },
+  {
+    "item_id":236,
+    "comment":"Excelente producto, muy recomendable"
+  },
+  {
+    "item_id":106,
+    "comment":"Gran producto para el d\u00eda a d\u00eda"
+  },
+  {
+    "item_id":110,
+    "comment":"Me gust\u00f3 mucho este producto"
+  },
+  {
+    "item_id":188,
+    "comment":"Me gust\u00f3 mucho este producto"
+  },
+  {
+    "item_id":172,
+    "comment":"Podr\u00eda ser mejor"
+  },
+  {
+    "item_id":228,
+    "comment":"Excelente producto, muy recomendable"
+  },
+  {
+    "item_id":227,
+    "comment":"Muy buena compra"
+  },
+  {
+    "item_id":146,
+    "comment":"Me gust\u00f3 mucho este producto"
+  },
+  {
+    "item_id":190,
+    "comment":"No lo volver\u00eda a comprar"
+  },
+  {
+    "item_id":118,
     "comment":"Me gust\u00f3 mucho este producto"
   },
   {
@@ -64,383 +648,171 @@
     "comment":"Muy buena compra"
   },
   {
-    "item_id":119,
-    "comment":"Funciona perfectamente"
-  },
-  {
-    "item_id":138,
-    "comment":"Funciona perfectamente"
-  },
-  {
-    "item_id":111,
-    "comment":"Buena relaci\u00f3n calidad precio"
-  },
-  {
-    "item_id":211,
-    "comment":"Podr\u00eda ser mejor"
-  },
-  {
-    "item_id":238,
-    "comment":"Gran producto para el d\u00eda a d\u00eda"
-  },
-  {
-    "item_id":138,
-    "comment":"No lo volver\u00eda a comprar"
-  },
-  {
-    "item_id":164,
-    "comment":"Gran producto para el d\u00eda a d\u00eda"
-  },
-  {
-    "item_id":133,
-    "comment":"Funciona perfectamente"
-  },
-  {
-    "item_id":250,
-    "comment":"Muy buena compra"
-  },
-  {
-    "item_id":221,
-    "comment":"Cumple con lo esperado"
-  },
-  {
-    "item_id":117,
-    "comment":"Buena relaci\u00f3n calidad precio"
-  },
-  {
-    "item_id":138,
-    "comment":"No lo volver\u00eda a comprar"
-  },
-  {
-    "item_id":211,
-    "comment":"Cumple con lo esperado"
-  },
-  {
-    "item_id":232,
-    "comment":"Buena relaci\u00f3n calidad precio"
-  },
-  {
-    "item_id":186,
-    "comment":"Cumple con lo esperado"
-  },
-  {
     "item_id":174,
-    "comment":"Podr\u00eda ser mejor"
-  },
-  {
-    "item_id":134,
-    "comment":"Excelente producto, muy recomendable"
-  },
-  {
-    "item_id":176,
-    "comment":"Funciona perfectamente"
-  },
-  {
-    "item_id":234,
-    "comment":"Podr\u00eda ser mejor"
-  },
-  {
-    "item_id":217,
-    "comment":"Excelente producto, muy recomendable"
-  },
-  {
-    "item_id":158,
-    "comment":"Me gust\u00f3 mucho este producto"
-  },
-  {
-    "item_id":234,
-    "comment":"Gran producto para el d\u00eda a d\u00eda"
+    "comment":"No cumpli\u00f3 mis expectativas"
   },
   {
     "item_id":240,
-    "comment":"Excelente producto, muy recomendable"
-  },
-  {
-    "item_id":187,
-    "comment":"Cumple con lo esperado"
-  },
-  {
-    "item_id":245,
-    "comment":"No lo volver\u00eda a comprar"
-  },
-  {
-    "item_id":119,
-    "comment":"Excelente producto, muy recomendable"
-  },
-  {
-    "item_id":225,
-    "comment":"Buena relaci\u00f3n calidad precio"
-  },
-  {
-    "item_id":202,
-    "comment":"Podr\u00eda ser mejor"
-  },
-  {
-    "item_id":103,
-    "comment":"Excelente producto, muy recomendable"
-  },
-  {
-    "item_id":200,
-    "comment":"Podr\u00eda ser mejor"
-  },
-  {
-    "item_id":219,
-    "comment":"Funciona perfectamente"
-  },
-  {
-    "item_id":249,
     "comment":"Me gust\u00f3 mucho este producto"
-  },
-  {
-    "item_id":230,
-    "comment":"Muy buena compra"
-  },
-  {
-    "item_id":208,
-    "comment":"Gran producto para el d\u00eda a d\u00eda"
   },
   {
     "item_id":168,
-    "comment":"Excelente producto, muy recomendable"
+    "comment":"Funciona perfectamente"
   },
   {
-    "item_id":249,
+    "item_id":164,
+    "comment":"Muy buena compra"
+  },
+  {
+    "item_id":164,
+    "comment":"Muy buena compra"
+  },
+  {
+    "item_id":171,
     "comment":"Buena relaci\u00f3n calidad precio"
   },
   {
-    "item_id":175,
-    "comment":"No lo volver\u00eda a comprar"
-  },
-  {
-    "item_id":209,
+    "item_id":244,
     "comment":"Funciona perfectamente"
   },
   {
-    "item_id":165,
-    "comment":"Funciona perfectamente"
-  },
-  {
-    "item_id":153,
-    "comment":"Gran producto para el d\u00eda a d\u00eda"
-  },
-  {
-    "item_id":225,
-    "comment":"Funciona perfectamente"
-  },
-  {
-    "item_id":239,
-    "comment":"Excelente producto, muy recomendable"
-  },
-  {
-    "item_id":117,
-    "comment":"No cumpli\u00f3 mis expectativas"
-  },
-  {
-    "item_id":125,
+    "item_id":159,
     "comment":"Podr\u00eda ser mejor"
   },
   {
-    "item_id":158,
-    "comment":"Me gust\u00f3 mucho este producto"
-  },
-  {
-    "item_id":159,
-    "comment":"Excelente producto, muy recomendable"
-  },
-  {
-    "item_id":179,
-    "comment":"Gran producto para el d\u00eda a d\u00eda"
-  },
-  {
-    "item_id":209,
-    "comment":"Me gust\u00f3 mucho este producto"
-  },
-  {
-    "item_id":106,
-    "comment":"Gran producto para el d\u00eda a d\u00eda"
-  },
-  {
-    "item_id":127,
-    "comment":"Muy buena compra"
-  },
-  {
-    "item_id":140,
-    "comment":"Excelente producto, muy recomendable"
-  },
-  {
-    "item_id":115,
-    "comment":"Muy buena compra"
-  },
-  {
-    "item_id":245,
-    "comment":"Muy buena compra"
-  },
-  {
-    "item_id":160,
-    "comment":"Excelente producto, muy recomendable"
-  },
-  {
-    "item_id":242,
+    "item_id":146,
     "comment":"Funciona perfectamente"
   },
   {
-    "item_id":198,
-    "comment":"Muy buena compra"
-  },
-  {
-    "item_id":140,
-    "comment":"Buena relaci\u00f3n calidad precio"
-  },
-  {
-    "item_id":182,
-    "comment":"Cumple con lo esperado"
-  },
-  {
-    "item_id":225,
-    "comment":"Gran producto para el d\u00eda a d\u00eda"
-  },
-  {
-    "item_id":152,
-    "comment":"Me gust\u00f3 mucho este producto"
-  },
-  {
-    "item_id":161,
-    "comment":"Gran producto para el d\u00eda a d\u00eda"
-  },
-  {
-    "item_id":210,
+    "item_id":240,
     "comment":"Funciona perfectamente"
   },
   {
-    "item_id":230,
-    "comment":"Buena relaci\u00f3n calidad precio"
+    "item_id":171,
+    "comment":"Podr\u00eda ser mejor"
   },
   {
-    "item_id":159,
-    "comment":"Muy buena compra"
-  },
-  {
-    "item_id":128,
-    "comment":"No cumpli\u00f3 mis expectativas"
-  },
-  {
-    "item_id":227,
-    "comment":"No cumpli\u00f3 mis expectativas"
-  },
-  {
-    "item_id":239,
-    "comment":"Gran producto para el d\u00eda a d\u00eda"
-  },
-  {
-    "item_id":148,
-    "comment":"Gran producto para el d\u00eda a d\u00eda"
-  },
-  {
-    "item_id":102,
-    "comment":"Funciona perfectamente"
-  },
-  {
-    "item_id":235,
+    "item_id":129,
     "comment":"Me gust\u00f3 mucho este producto"
   },
   {
     "item_id":129,
-    "comment":"Podr\u00eda ser mejor"
+    "comment":"No lo volver\u00eda a comprar"
   },
   {
-    "item_id":119,
-    "comment":"Muy buena compra"
-  },
-  {
-    "item_id":186,
-    "comment":"Gran producto para el d\u00eda a d\u00eda"
-  },
-  {
-    "item_id":234,
-    "comment":"Excelente producto, muy recomendable"
-  },
-  {
-    "item_id":222,
-    "comment":"No cumpli\u00f3 mis expectativas"
-  },
-  {
-    "item_id":140,
-    "comment":"Me gust\u00f3 mucho este producto"
-  },
-  {
-    "item_id":152,
-    "comment":"Me gust\u00f3 mucho este producto"
-  },
-  {
-    "item_id":210,
-    "comment":"Muy buena compra"
-  },
-  {
-    "item_id":144,
-    "comment":"Funciona perfectamente"
-  },
-  {
-    "item_id":117,
-    "comment":"Excelente producto, muy recomendable"
-  },
-  {
-    "item_id":104,
+    "item_id":212,
     "comment":"Cumple con lo esperado"
   },
   {
-    "item_id":229,
+    "item_id":179,
+    "comment":"No lo volver\u00eda a comprar"
+  },
+  {
+    "item_id":216,
+    "comment":"Cumple con lo esperado"
+  },
+  {
+    "item_id":144,
+    "comment":"Cumple con lo esperado"
+  },
+  {
+    "item_id":123,
+    "comment":"Muy buena compra"
+  },
+  {
+    "item_id":127,
     "comment":"Funciona perfectamente"
   },
   {
-    "item_id":143,
-    "comment":"Podr\u00eda ser mejor"
+    "item_id":196,
+    "comment":"Cumple con lo esperado"
   },
   {
-    "item_id":132,
-    "comment":"Podr\u00eda ser mejor"
-  },
-  {
-    "item_id":126,
-    "comment":"Me gust\u00f3 mucho este producto"
-  },
-  {
-    "item_id":211,
+    "item_id":167,
     "comment":"Excelente producto, muy recomendable"
   },
   {
-    "item_id":183,
-    "comment":"Podr\u00eda ser mejor"
-  },
-  {
-    "item_id":231,
+    "item_id":178,
     "comment":"Cumple con lo esperado"
   },
   {
     "item_id":243,
+    "comment":"Podr\u00eda ser mejor"
+  },
+  {
+    "item_id":130,
+    "comment":"Gran producto para el d\u00eda a d\u00eda"
+  },
+  {
+    "item_id":111,
+    "comment":"Funciona perfectamente"
+  },
+  {
+    "item_id":213,
+    "comment":"Muy buena compra"
+  },
+  {
+    "item_id":221,
     "comment":"Me gust\u00f3 mucho este producto"
+  },
+  {
+    "item_id":131,
+    "comment":"Buena relaci\u00f3n calidad precio"
+  },
+  {
+    "item_id":208,
+    "comment":"Funciona perfectamente"
+  },
+  {
+    "item_id":142,
+    "comment":"Excelente producto, muy recomendable"
+  },
+  {
+    "item_id":225,
+    "comment":"Funciona perfectamente"
+  },
+  {
+    "item_id":208,
+    "comment":"No cumpli\u00f3 mis expectativas"
   },
   {
     "item_id":166,
     "comment":"Podr\u00eda ser mejor"
   },
   {
-    "item_id":179,
-    "comment":"Funciona perfectamente"
+    "item_id":135,
+    "comment":"Gran producto para el d\u00eda a d\u00eda"
   },
   {
-    "item_id":160,
-    "comment":"Buena relaci\u00f3n calidad precio"
+    "item_id":151,
+    "comment":"Muy buena compra"
   },
   {
-    "item_id":133,
-    "comment":"No cumpli\u00f3 mis expectativas"
-  },
-  {
-    "item_id":119,
+    "item_id":169,
     "comment":"Me gust\u00f3 mucho este producto"
   },
   {
-    "item_id":105,
+    "item_id":183,
+    "comment":"Funciona perfectamente"
+  },
+  {
+    "item_id":131,
+    "comment":"No cumpli\u00f3 mis expectativas"
+  },
+  {
+    "item_id":223,
+    "comment":"Cumple con lo esperado"
+  },
+  {
+    "item_id":103,
+    "comment":"Excelente producto, muy recomendable"
+  },
+  {
+    "item_id":245,
+    "comment":"No cumpli\u00f3 mis expectativas"
+  },
+  {
+    "item_id":142,
     "comment":"No cumpli\u00f3 mis expectativas"
   },
   {
@@ -448,335 +820,75 @@
     "comment":"Excelente producto, muy recomendable"
   },
   {
-    "item_id":219,
-    "comment":"Cumple con lo esperado"
-  },
-  {
-    "item_id":235,
-    "comment":"Excelente producto, muy recomendable"
-  },
-  {
-    "item_id":113,
-    "comment":"Buena relaci\u00f3n calidad precio"
-  },
-  {
-    "item_id":133,
-    "comment":"Cumple con lo esperado"
-  },
-  {
-    "item_id":118,
-    "comment":"Cumple con lo esperado"
-  },
-  {
-    "item_id":152,
-    "comment":"Buena relaci\u00f3n calidad precio"
-  },
-  {
-    "item_id":182,
-    "comment":"Podr\u00eda ser mejor"
-  },
-  {
-    "item_id":174,
-    "comment":"Buena relaci\u00f3n calidad precio"
-  },
-  {
-    "item_id":120,
-    "comment":"Buena relaci\u00f3n calidad precio"
-  },
-  {
-    "item_id":228,
-    "comment":"Gran producto para el d\u00eda a d\u00eda"
-  },
-  {
-    "item_id":141,
-    "comment":"No lo volver\u00eda a comprar"
-  },
-  {
-    "item_id":186,
+    "item_id":246,
     "comment":"Funciona perfectamente"
   },
   {
-    "item_id":172,
-    "comment":"No lo volver\u00eda a comprar"
-  },
-  {
-    "item_id":200,
-    "comment":"Me gust\u00f3 mucho este producto"
-  },
-  {
-    "item_id":201,
+    "item_id":241,
     "comment":"Excelente producto, muy recomendable"
-  },
-  {
-    "item_id":178,
-    "comment":"Funciona perfectamente"
-  },
-  {
-    "item_id":185,
-    "comment":"Cumple con lo esperado"
-  },
-  {
-    "item_id":162,
-    "comment":"Muy buena compra"
-  },
-  {
-    "item_id":103,
-    "comment":"Buena relaci\u00f3n calidad precio"
-  },
-  {
-    "item_id":179,
-    "comment":"No lo volver\u00eda a comprar"
-  },
-  {
-    "item_id":163,
-    "comment":"Buena relaci\u00f3n calidad precio"
-  },
-  {
-    "item_id":226,
-    "comment":"Cumple con lo esperado"
-  },
-  {
-    "item_id":222,
-    "comment":"No lo volver\u00eda a comprar"
-  },
-  {
-    "item_id":126,
-    "comment":"Muy buena compra"
-  },
-  {
-    "item_id":197,
-    "comment":"No cumpli\u00f3 mis expectativas"
-  },
-  {
-    "item_id":130,
-    "comment":"No lo volver\u00eda a comprar"
-  },
-  {
-    "item_id":139,
-    "comment":"Me gust\u00f3 mucho este producto"
   },
   {
     "item_id":240,
     "comment":"Muy buena compra"
   },
   {
-    "item_id":206,
-    "comment":"Gran producto para el d\u00eda a d\u00eda"
-  },
-  {
-    "item_id":148,
-    "comment":"Gran producto para el d\u00eda a d\u00eda"
-  },
-  {
-    "item_id":176,
-    "comment":"Muy buena compra"
-  },
-  {
-    "item_id":130,
-    "comment":"No lo volver\u00eda a comprar"
-  },
-  {
-    "item_id":125,
-    "comment":"Cumple con lo esperado"
-  },
-  {
-    "item_id":204,
-    "comment":"Buena relaci\u00f3n calidad precio"
-  },
-  {
-    "item_id":116,
-    "comment":"Muy buena compra"
-  },
-  {
-    "item_id":167,
-    "comment":"Podr\u00eda ser mejor"
-  },
-  {
-    "item_id":130,
-    "comment":"Buena relaci\u00f3n calidad precio"
-  },
-  {
-    "item_id":168,
-    "comment":"Muy buena compra"
-  },
-  {
-    "item_id":196,
-    "comment":"Excelente producto, muy recomendable"
-  },
-  {
-    "item_id":213,
-    "comment":"Cumple con lo esperado"
-  },
-  {
-    "item_id":209,
-    "comment":"Excelente producto, muy recomendable"
-  },
-  {
-    "item_id":211,
-    "comment":"Buena relaci\u00f3n calidad precio"
-  },
-  {
-    "item_id":160,
-    "comment":"No lo volver\u00eda a comprar"
-  },
-  {
-    "item_id":147,
-    "comment":"No lo volver\u00eda a comprar"
-  },
-  {
-    "item_id":212,
-    "comment":"Excelente producto, muy recomendable"
-  },
-  {
-    "item_id":171,
-    "comment":"Excelente producto, muy recomendable"
-  },
-  {
-    "item_id":205,
-    "comment":"Cumple con lo esperado"
-  },
-  {
-    "item_id":225,
-    "comment":"Muy buena compra"
-  },
-  {
-    "item_id":150,
-    "comment":"Muy buena compra"
-  },
-  {
-    "item_id":222,
-    "comment":"No lo volver\u00eda a comprar"
-  },
-  {
-    "item_id":194,
-    "comment":"No lo volver\u00eda a comprar"
-  },
-  {
-    "item_id":205,
-    "comment":"Cumple con lo esperado"
-  },
-  {
-    "item_id":200,
-    "comment":"Me gust\u00f3 mucho este producto"
-  },
-  {
-    "item_id":111,
-    "comment":"Funciona perfectamente"
-  },
-  {
-    "item_id":126,
-    "comment":"Excelente producto, muy recomendable"
-  },
-  {
-    "item_id":122,
-    "comment":"No cumpli\u00f3 mis expectativas"
-  },
-  {
-    "item_id":237,
-    "comment":"Cumple con lo esperado"
-  },
-  {
-    "item_id":201,
-    "comment":"Podr\u00eda ser mejor"
-  },
-  {
-    "item_id":214,
-    "comment":"Buena relaci\u00f3n calidad precio"
-  },
-  {
-    "item_id":132,
-    "comment":"Cumple con lo esperado"
-  },
-  {
-    "item_id":128,
-    "comment":"Funciona perfectamente"
-  },
-  {
-    "item_id":155,
-    "comment":"Buena relaci\u00f3n calidad precio"
-  },
-  {
-    "item_id":214,
-    "comment":"Muy buena compra"
-  },
-  {
-    "item_id":190,
-    "comment":"Cumple con lo esperado"
-  },
-  {
-    "item_id":129,
-    "comment":"Buena relaci\u00f3n calidad precio"
-  },
-  {
-    "item_id":150,
-    "comment":"Excelente producto, muy recomendable"
-  },
-  {
-    "item_id":173,
-    "comment":"Me gust\u00f3 mucho este producto"
-  },
-  {
-    "item_id":151,
-    "comment":"Excelente producto, muy recomendable"
-  },
-  {
-    "item_id":202,
-    "comment":"Funciona perfectamente"
-  },
-  {
-    "item_id":176,
-    "comment":"Podr\u00eda ser mejor"
-  },
-  {
-    "item_id":227,
-    "comment":"Buena relaci\u00f3n calidad precio"
-  },
-  {
-    "item_id":132,
-    "comment":"No lo volver\u00eda a comprar"
-  },
-  {
-    "item_id":124,
-    "comment":"No lo volver\u00eda a comprar"
-  },
-  {
-    "item_id":101,
-    "comment":"Buena relaci\u00f3n calidad precio"
-  },
-  {
-    "item_id":117,
-    "comment":"Muy buena compra"
-  },
-  {
-    "item_id":105,
-    "comment":"Excelente producto, muy recomendable"
-  },
-  {
-    "item_id":163,
-    "comment":"No cumpli\u00f3 mis expectativas"
-  },
-  {
-    "item_id":238,
-    "comment":"No cumpli\u00f3 mis expectativas"
-  },
-  {
-    "item_id":186,
-    "comment":"No lo volver\u00eda a comprar"
-  },
-  {
-    "item_id":182,
-    "comment":"Cumple con lo esperado"
-  },
-  {
-    "item_id":160,
-    "comment":"Podr\u00eda ser mejor"
-  },
-  {
     "item_id":230,
     "comment":"No lo volver\u00eda a comprar"
   },
   {
-    "item_id":198,
+    "item_id":215,
+    "comment":"Me gust\u00f3 mucho este producto"
+  },
+  {
+    "item_id":244,
+    "comment":"Buena relaci\u00f3n calidad precio"
+  },
+  {
+    "item_id":115,
+    "comment":"No cumpli\u00f3 mis expectativas"
+  },
+  {
+    "item_id":128,
+    "comment":"Buena relaci\u00f3n calidad precio"
+  },
+  {
+    "item_id":131,
+    "comment":"Cumple con lo esperado"
+  },
+  {
+    "item_id":220,
+    "comment":"Muy buena compra"
+  },
+  {
+    "item_id":245,
+    "comment":"Podr\u00eda ser mejor"
+  },
+  {
+    "item_id":182,
+    "comment":"Funciona perfectamente"
+  },
+  {
+    "item_id":233,
+    "comment":"No cumpli\u00f3 mis expectativas"
+  },
+  {
+    "item_id":250,
+    "comment":"Funciona perfectamente"
+  },
+  {
+    "item_id":126,
+    "comment":"Muy buena compra"
+  },
+  {
+    "item_id":101,
+    "comment":"Funciona perfectamente"
+  },
+  {
+    "item_id":184,
+    "comment":"Gran producto para el d\u00eda a d\u00eda"
+  },
+  {
+    "item_id":138,
     "comment":"Excelente producto, muy recomendable"
   },
   {
@@ -784,219 +896,107 @@
     "comment":"Podr\u00eda ser mejor"
   },
   {
-    "item_id":138,
+    "item_id":195,
     "comment":"Gran producto para el d\u00eda a d\u00eda"
   },
   {
-    "item_id":158,
-    "comment":"Me gust\u00f3 mucho este producto"
-  },
-  {
-    "item_id":175,
-    "comment":"Gran producto para el d\u00eda a d\u00eda"
-  },
-  {
-    "item_id":235,
-    "comment":"Podr\u00eda ser mejor"
-  },
-  {
-    "item_id":196,
-    "comment":"Excelente producto, muy recomendable"
-  },
-  {
-    "item_id":142,
+    "item_id":205,
     "comment":"Me gust\u00f3 mucho este producto"
   },
   {
     "item_id":224,
-    "comment":"No lo volver\u00eda a comprar"
-  },
-  {
-    "item_id":246,
-    "comment":"Me gust\u00f3 mucho este producto"
-  },
-  {
-    "item_id":209,
-    "comment":"Excelente producto, muy recomendable"
-  },
-  {
-    "item_id":234,
-    "comment":"No lo volver\u00eda a comprar"
-  },
-  {
-    "item_id":114,
-    "comment":"Excelente producto, muy recomendable"
-  },
-  {
-    "item_id":127,
-    "comment":"Muy buena compra"
-  },
-  {
-    "item_id":137,
     "comment":"Gran producto para el d\u00eda a d\u00eda"
-  },
-  {
-    "item_id":160,
-    "comment":"No cumpli\u00f3 mis expectativas"
-  },
-  {
-    "item_id":146,
-    "comment":"Excelente producto, muy recomendable"
-  },
-  {
-    "item_id":130,
-    "comment":"Me gust\u00f3 mucho este producto"
-  },
-  {
-    "item_id":111,
-    "comment":"Cumple con lo esperado"
-  },
-  {
-    "item_id":140,
-    "comment":"Excelente producto, muy recomendable"
-  },
-  {
-    "item_id":225,
-    "comment":"Muy buena compra"
-  },
-  {
-    "item_id":104,
-    "comment":"Cumple con lo esperado"
-  },
-  {
-    "item_id":246,
-    "comment":"Excelente producto, muy recomendable"
-  },
-  {
-    "item_id":224,
-    "comment":"Excelente producto, muy recomendable"
-  },
-  {
-    "item_id":242,
-    "comment":"Funciona perfectamente"
-  },
-  {
-    "item_id":102,
-    "comment":"No lo volver\u00eda a comprar"
   },
   {
     "item_id":198,
-    "comment":"Cumple con lo esperado"
+    "comment":"Podr\u00eda ser mejor"
   },
   {
-    "item_id":246,
-    "comment":"No lo volver\u00eda a comprar"
-  },
-  {
-    "item_id":233,
-    "comment":"No cumpli\u00f3 mis expectativas"
-  },
-  {
-    "item_id":115,
-    "comment":"Cumple con lo esperado"
-  },
-  {
-    "item_id":112,
-    "comment":"Buena relaci\u00f3n calidad precio"
-  },
-  {
-    "item_id":110,
-    "comment":"Funciona perfectamente"
-  },
-  {
-    "item_id":206,
+    "item_id":200,
     "comment":"Me gust\u00f3 mucho este producto"
   },
   {
-    "item_id":137,
+    "item_id":242,
+    "comment":"Me gust\u00f3 mucho este producto"
+  },
+  {
+    "item_id":169,
     "comment":"Podr\u00eda ser mejor"
   },
   {
-    "item_id":249,
-    "comment":"Gran producto para el d\u00eda a d\u00eda"
-  },
-  {
-    "item_id":235,
-    "comment":"Buena relaci\u00f3n calidad precio"
-  },
-  {
-    "item_id":164,
-    "comment":"Podr\u00eda ser mejor"
-  },
-  {
-    "item_id":173,
-    "comment":"Funciona perfectamente"
-  },
-  {
-    "item_id":204,
-    "comment":"Funciona perfectamente"
-  },
-  {
-    "item_id":228,
-    "comment":"Gran producto para el d\u00eda a d\u00eda"
-  },
-  {
-    "item_id":168,
-    "comment":"No cumpli\u00f3 mis expectativas"
-  },
-  {
-    "item_id":112,
-    "comment":"Gran producto para el d\u00eda a d\u00eda"
-  },
-  {
-    "item_id":203,
-    "comment":"Cumple con lo esperado"
-  },
-  {
-    "item_id":194,
-    "comment":"Excelente producto, muy recomendable"
-  },
-  {
-    "item_id":170,
-    "comment":"No lo volver\u00eda a comprar"
-  },
-  {
-    "item_id":174,
-    "comment":"No lo volver\u00eda a comprar"
-  },
-  {
-    "item_id":106,
-    "comment":"Podr\u00eda ser mejor"
-  },
-  {
-    "item_id":247,
-    "comment":"Cumple con lo esperado"
-  },
-  {
-    "item_id":196,
-    "comment":"Cumple con lo esperado"
-  },
-  {
-    "item_id":143,
+    "item_id":124,
     "comment":"Muy buena compra"
   },
   {
-    "item_id":204,
+    "item_id":221,
+    "comment":"Buena relaci\u00f3n calidad precio"
+  },
+  {
+    "item_id":224,
+    "comment":"Me gust\u00f3 mucho este producto"
+  },
+  {
+    "item_id":129,
+    "comment":"Excelente producto, muy recomendable"
+  },
+  {
+    "item_id":145,
+    "comment":"Me gust\u00f3 mucho este producto"
+  },
+  {
+    "item_id":214,
     "comment":"Cumple con lo esperado"
   },
   {
     "item_id":226,
-    "comment":"Podr\u00eda ser mejor"
+    "comment":"Funciona perfectamente"
   },
   {
-    "item_id":231,
-    "comment":"Excelente producto, muy recomendable"
+    "item_id":103,
+    "comment":"No lo volver\u00eda a comprar"
   },
   {
-    "item_id":111,
+    "item_id":205,
     "comment":"No cumpli\u00f3 mis expectativas"
   },
   {
-    "item_id":247,
-    "comment":"Podr\u00eda ser mejor"
+    "item_id":103,
+    "comment":"Buena relaci\u00f3n calidad precio"
   },
   {
-    "item_id":211,
+    "item_id":217,
+    "comment":"Excelente producto, muy recomendable"
+  },
+  {
+    "item_id":229,
+    "comment":"Me gust\u00f3 mucho este producto"
+  },
+  {
+    "item_id":163,
+    "comment":"Cumple con lo esperado"
+  },
+  {
+    "item_id":138,
     "comment":"Muy buena compra"
+  },
+  {
+    "item_id":143,
+    "comment":"Funciona perfectamente"
+  },
+  {
+    "item_id":189,
+    "comment":"Excelente producto, muy recomendable"
+  },
+  {
+    "item_id":124,
+    "comment":"Funciona perfectamente"
+  },
+  {
+    "item_id":173,
+    "comment":"No cumpli\u00f3 mis expectativas"
+  },
+  {
+    "item_id":167,
+    "comment":"No cumpli\u00f3 mis expectativas"
   }
 ]

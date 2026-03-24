@@ -1,302 +1,302 @@
 [
   {
     "user_id":1,
-    "latitude":19.5959771876,
-    "longitude":-99.1573991949
+    "latitude":20.1070480739,
+    "longitude":-98.7790906674
   },
   {
     "user_id":2,
-    "latitude":19.334750834,
-    "longitude":-99.0344008414
+    "latitude":20.0944175774,
+    "longitude":-98.7188098139
   },
   {
     "user_id":3,
-    "latitude":19.4840430708,
-    "longitude":-99.0801216887
+    "latitude":19.995873479,
+    "longitude":-98.6908574828
   },
   {
     "user_id":4,
-    "latitude":19.2849354602,
-    "longitude":-99.1800732608
+    "latitude":20.0414547358,
+    "longitude":-98.7594394579
   },
   {
     "user_id":5,
-    "latitude":19.4316089781,
-    "longitude":-99.2654391894
+    "latitude":19.9963327703,
+    "longitude":-98.7027207644
   },
   {
     "user_id":6,
-    "latitude":19.5229520016,
-    "longitude":-99.2358724813
+    "latitude":20.0498054267,
+    "longitude":-98.6958007321
   },
   {
     "user_id":7,
-    "latitude":19.2709214939,
-    "longitude":-99.3715538058
+    "latitude":20.1402746424,
+    "longitude":-98.7683701876
   },
   {
     "user_id":8,
-    "latitude":19.5806642175,
-    "longitude":-99.3379020288
+    "latitude":20.1072924587,
+    "longitude":-98.6937697557
   },
   {
     "user_id":9,
-    "latitude":19.450449462,
-    "longitude":-98.9957848338
+    "latitude":20.0152565553,
+    "longitude":-98.709999328
   },
   {
     "user_id":10,
-    "latitude":19.465706267,
-    "longitude":-98.9112617004
+    "latitude":20.0960571219,
+    "longitude":-98.7447918757
   },
   {
     "user_id":11,
-    "latitude":19.5412977296,
-    "longitude":-99.0003960619
+    "latitude":19.9964276506,
+    "longitude":-98.6910199233
   },
   {
     "user_id":12,
-    "latitude":19.5663559168,
-    "longitude":-99.2509872747
+    "latitude":20.0041080241,
+    "longitude":-98.6980482778
   },
   {
     "user_id":13,
-    "latitude":19.4054506231,
-    "longitude":-99.3310889664
+    "latitude":20.0718398017,
+    "longitude":-98.7652944687
   },
   {
     "user_id":14,
-    "latitude":19.4905218548,
-    "longitude":-98.9397962455
+    "latitude":20.0215104994,
+    "longitude":-98.6791667345
   },
   {
     "user_id":15,
-    "latitude":19.438114339,
-    "longitude":-99.1548008104
+    "latitude":20.0027446252,
+    "longitude":-98.6872468359
   },
   {
     "user_id":16,
-    "latitude":19.2041610154,
-    "longitude":-98.9369616921
+    "latitude":20.0838587645,
+    "longitude":-98.7573182532
   },
   {
     "user_id":17,
-    "latitude":19.5751029476,
-    "longitude":-99.1896434912
+    "latitude":20.0946287442,
+    "longitude":-98.7799267887
   },
   {
     "user_id":18,
-    "latitude":19.4346355016,
-    "longitude":-99.1604833099
+    "latitude":20.0139647974,
+    "longitude":-98.7271849544
   },
   {
     "user_id":19,
-    "latitude":19.2073649104,
-    "longitude":-99.3026165046
+    "latitude":20.0316832147,
+    "longitude":-98.7982948982
   },
   {
     "user_id":20,
-    "latitude":19.4192485075,
-    "longitude":-98.9529612191
+    "latitude":20.0570503094,
+    "longitude":-98.7044157447
   },
   {
     "user_id":21,
-    "latitude":19.5230810483,
-    "longitude":-99.3509775186
+    "latitude":20.0350517039,
+    "longitude":-98.8002111877
   },
   {
     "user_id":22,
-    "latitude":19.3163775439,
-    "longitude":-98.9063095525
+    "latitude":20.1270993607,
+    "longitude":-98.6944703319
   },
   {
     "user_id":23,
-    "latitude":19.5097615873,
-    "longitude":-99.2123534364
+    "latitude":20.0610792223,
+    "longitude":-98.8000117786
   },
   {
     "user_id":24,
-    "latitude":19.5158296947,
-    "longitude":-98.9271191079
+    "latitude":20.0782739762,
+    "longitude":-98.7064724377
   },
   {
     "user_id":25,
-    "latitude":19.5630402052,
-    "longitude":-99.13756419
+    "latitude":19.9708842591,
+    "longitude":-98.7147729393
   },
   {
     "user_id":26,
-    "latitude":19.5752309343,
-    "longitude":-98.9732665937
+    "latitude":19.990619327,
+    "longitude":-98.700822007
   },
   {
     "user_id":27,
-    "latitude":19.2998756798,
-    "longitude":-98.9439041292
+    "latitude":19.9884091755,
+    "longitude":-98.7068552841
   },
   {
     "user_id":28,
-    "latitude":19.3059747435,
-    "longitude":-98.9950014869
+    "latitude":20.0981620095,
+    "longitude":-98.7519771434
   },
   {
     "user_id":29,
-    "latitude":19.2868910607,
-    "longitude":-99.1679907079
+    "latitude":20.0609909549,
+    "longitude":-98.726291248
   },
   {
     "user_id":30,
-    "latitude":19.4067709481,
-    "longitude":-99.0601563565
+    "latitude":20.0315924117,
+    "longitude":-98.7034837602
   },
   {
     "user_id":31,
-    "latitude":19.3181147943,
-    "longitude":-99.2252953315
+    "latitude":19.9733576086,
+    "longitude":-98.7307933211
   },
   {
     "user_id":32,
-    "latitude":19.2993188653,
-    "longitude":-99.2304267376
+    "latitude":20.0229538103,
+    "longitude":-98.7067010401
   },
   {
     "user_id":33,
-    "latitude":19.5930928641,
-    "longitude":-99.3633392101
+    "latitude":20.1348165681,
+    "longitude":-98.7013582216
   },
   {
     "user_id":34,
-    "latitude":19.4818730679,
-    "longitude":-98.9750414569
+    "latitude":20.113680695,
+    "longitude":-98.7153584707
   },
   {
     "user_id":35,
-    "latitude":19.3865505972,
-    "longitude":-99.045088417
+    "latitude":20.0543370939,
+    "longitude":-98.7958540478
   },
   {
     "user_id":36,
-    "latitude":19.3953902676,
-    "longitude":-99.1667136187
+    "latitude":20.0831401718,
+    "longitude":-98.7239052755
   },
   {
     "user_id":37,
-    "latitude":19.5761028494,
-    "longitude":-99.0809583435
+    "latitude":20.0648258903,
+    "longitude":-98.6847303638
   },
   {
     "user_id":38,
-    "latitude":19.5215132536,
-    "longitude":-99.1201737479
+    "latitude":20.111604992,
+    "longitude":-98.7600308307
   },
   {
     "user_id":39,
-    "latitude":19.2849727942,
-    "longitude":-99.1394406538
+    "latitude":19.9978074456,
+    "longitude":-98.7303455623
   },
   {
     "user_id":40,
-    "latitude":19.2446024284,
-    "longitude":-99.3724212142
+    "latitude":20.0795904332,
+    "longitude":-98.749111781
   },
   {
     "user_id":41,
-    "latitude":19.2298516923,
-    "longitude":-99.006810814
+    "latitude":20.1320620734,
+    "longitude":-98.7478032489
   },
   {
     "user_id":42,
-    "latitude":19.2342396247,
-    "longitude":-99.2935059621
+    "latitude":19.9733666028,
+    "longitude":-98.793076748
   },
   {
     "user_id":43,
-    "latitude":19.3343986482,
-    "longitude":-99.0011642032
+    "latitude":20.1050575805,
+    "longitude":-98.7458565687
   },
   {
     "user_id":44,
-    "latitude":19.4077778191,
-    "longitude":-99.0596253194
+    "latitude":20.134643229,
+    "longitude":-98.7025997228
   },
   {
     "user_id":45,
-    "latitude":19.2764788203,
-    "longitude":-98.9787976955
+    "latitude":20.007835949,
+    "longitude":-98.7310258335
   },
   {
     "user_id":46,
-    "latitude":19.2149352501,
-    "longitude":-99.1180742439
+    "latitude":20.1212483782,
+    "longitude":-98.7192016971
   },
   {
     "user_id":47,
-    "latitude":19.3452918863,
-    "longitude":-99.3209436709
+    "latitude":20.0577191139,
+    "longitude":-98.7014124566
   },
   {
     "user_id":48,
-    "latitude":19.5868143022,
-    "longitude":-99.1749317874
+    "latitude":20.0894530568,
+    "longitude":-98.7024733847
   },
   {
     "user_id":49,
-    "latitude":19.5680361949,
-    "longitude":-98.9777464094
+    "latitude":20.1000796796,
+    "longitude":-98.751925281
   },
   {
     "user_id":50,
-    "latitude":19.3879231581,
-    "longitude":-99.1486780048
+    "latitude":19.9652799828,
+    "longitude":-98.7366816823
   },
   {
     "user_id":51,
-    "latitude":19.5136708403,
-    "longitude":-99.2764118656
+    "latitude":20.0427660509,
+    "longitude":-98.7298049273
   },
   {
     "user_id":52,
-    "latitude":19.5775160647,
-    "longitude":-99.0903594384
+    "latitude":20.0963948425,
+    "longitude":-98.7268574458
   },
   {
     "user_id":53,
-    "latitude":19.320838566,
-    "longitude":-98.9590437231
+    "latitude":20.1085433041,
+    "longitude":-98.7844006956
   },
   {
     "user_id":54,
-    "latitude":19.5484209796,
-    "longitude":-99.1865572461
+    "latitude":20.0691994916,
+    "longitude":-98.7184287964
   },
   {
     "user_id":55,
-    "latitude":19.4043135615,
-    "longitude":-99.3510446759
+    "latitude":20.0584577061,
+    "longitude":-98.7710958973
   },
   {
     "user_id":56,
-    "latitude":19.3756406245,
-    "longitude":-99.145312032
+    "latitude":20.0736546441,
+    "longitude":-98.6965961015
   },
   {
     "user_id":57,
-    "latitude":19.4019830266,
-    "longitude":-99.2617495313
+    "latitude":20.1029072082,
+    "longitude":-98.7936095899
   },
   {
     "user_id":58,
-    "latitude":19.394900444,
-    "longitude":-99.1676811628
+    "latitude":20.0485259197,
+    "longitude":-98.7304690995
   },
   {
     "user_id":59,
-    "latitude":19.4934976651,
-    "longitude":-99.3305215153
+    "latitude":20.1077168036,
+    "longitude":-98.7841268703
   },
   {
     "user_id":60,
-    "latitude":19.3156966058,
-    "longitude":-99.3908387446
+    "latitude":20.1143979286,
+    "longitude":-98.7604053398
   }
 ]
