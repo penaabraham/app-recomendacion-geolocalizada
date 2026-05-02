@@ -194,7 +194,15 @@ def recommend(user_id, lat_manual=None, lon_manual=None, top_n=5):
 
     rec["distance"] = rec["distance"].apply(lambda x: f"{x:.2f} km")
 
-    return rec[["name", "distance", "avg_rating", "reason"]].head(top_n)
+    rec["geo_score"]     = rec["geo_score"].round(4)
+    rec["rating_score"]  = rec["rating_score"].round(4)
+    rec["content_score"] = rec["content_score"].round(4)
+    rec["final_score"]   = rec["final_score"].round(4)
+
+    return rec[[
+        "name", "distance", "avg_rating", "reason",
+        "geo_score", "rating_score", "content_score", "final_score"
+    ]].head(top_n)
 
 
 def generate_reason(row):
