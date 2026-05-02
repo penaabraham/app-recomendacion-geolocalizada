@@ -510,7 +510,7 @@
 	\texttt{train.py}, responsable del entrenamiento y serialización de modelos;
 	\texttt{ALGORITMO\_PROPUESTO.py}, que implementa la lógica de recomendación
 	híbrida; y \texttt{main.py}, que expone la funcionalidad como una API REST.
-	A continuación se documentan en un flujo unificado de seis pasos.
+	A continuación se documentan en un flujo unificado de siete pasos.
 	
 	% ──────────────────────────────────────────────────────
 	\subsubsection{Paso 1: Instalación de Bibliotecas Necesarias}
@@ -788,7 +788,82 @@
 	\end{lstlisting}
 	
 	% ──────────────────────────────────────────────────────
-	\subsubsection{Paso 6: Generación de Recomendaciones}
+	\subsubsection{Paso 6: Normalización de Scores y Cálculo de Scores de Texto}
+	
+	Antes de combinar los distintos factores en un score final, es necesario
+	que todos los valores se encuentren en el mismo rango $[0, 1]$. Para esto,
+	\texttt{ALGORITMO\_PROPUESTO.py} define dos funciones de normalización y
+	una función que calcula los scores derivados del análisis de texto.
+	
+	\paragraph{Normalización de distancia y calificación.}
+	Las funciones \texttt{normalize\_distance} y \texttt{normalize\_rating}
+	aplican la misma técnica de normalización min-max, pero con una diferencia
+	clave en la dirección de la escala. En el caso de la calificación, un valor
+	mayor es preferible, por lo que la normalización estándar asigna el score
+	más alto al producto mejor calificado. En el caso de la distancia, ocurre
+	lo contrario: un valor menor es preferible, ya que una distancia más corta
+	indica mayor cercanía. Por esta razón, \texttt{normalize\_distance}
+	antepone el factor $1 -$ a la fórmula, invirtiendo la escala de modo que
+	el producto más cercano reciba siempre el valor máximo de 1.0 y el más
+	lejano el valor mínimo de 0.0, independientemente de las distancias
+	absolutas involucradas:
+	
+	\begin{lstlisting}[language=Python, caption=Funciones de normalización en ALGORITMO\_PROPUESTO.py]
+		def normalize_distance(distances):
+		max_d = distances.max()
+		min_d = distances.min()
+		return 1 - ((distances - min_d) / (max_d - min_d + 1e-6))
+		
+		
+		def normalize_rating(ratings):
+		return (ratings - ratings.min()) / (ratings.max() - ratings.min() + 1e-6)
+	\end{lstlisting}
+	
+	El término $\varepsilon = 10^{-6}$ en el denominador de ambas funciones
+	previene la división por cero en caso de que todos los valores del conjunto
+	sean idénticos.
+	
+	\paragraph{Cálculo de scores de texto.}
+	La función \texttt{compute\_text\_scores} calcula las dos señales textuales
+	que complementan la similitud TF-IDF: el \textit{lda\_score} y el
+	\textit{sentiment\_score}. Para el primero, carga la matriz LDA serializada
+	y extrae la intensidad del tópico dominante por producto (valor máximo en
+	cada fila), que luego normaliza con \texttt{normalize\_rating}. Para el
+	segundo, agrupa los comentarios por producto, los convierte en secuencias
+	tokenizadas y los pasa por el modelo Keras, obteniendo una probabilidad de
+	sentimiento positivo por producto que también se normaliza. Ambas señales
+	incluyen un bloque \texttt{try/except} que asigna ceros en caso de fallo,
+	garantizando que un error en el análisis de texto no interrumpa la
+	generación de recomendaciones:
+	
+	\begin{lstlisting}[language=Python, caption=Cálculo de scores LDA y sentimiento en ALGORITMO\_PROPUESTO.py]
+		def compute_text_scores():
+		
+		# LDA score: intensidad del topico dominante por producto
+		try:
+		lda_matrix = joblib.load(f"{MODELS_DIR}/lda_matrix.pkl")
+		lda_score  = pd.Series(lda_matrix.max(axis=1))
+		lda_score  = normalize_rating(lda_score)
+		except:
+		lda_score  = pd.Series(np.zeros(len(products)))
+		
+		# Sentiment score: probabilidad de opinion positiva (Keras)
+		try:
+		comments_grouped = comments.groupby('item_id')['comment'].apply(' '.join)
+		sequences        = tokenizer.texts_to_sequences(comments_grouped)
+		padded           = pad_sequences(sequences, maxlen=100)
+		preds            = model.predict(padded, verbose=0).flatten()
+		sentiment_score  = pd.Series(preds, index=comments_grouped.index)
+		sentiment_score  = normalize_rating(sentiment_score)
+		except Exception as e:
+		print(f"Error en sentiment_score: {e}")
+		sentiment_score  = pd.Series(np.zeros(len(products)))
+		
+		return lda_score, sentiment_score
+	\end{lstlisting}
+	
+	% ──────────────────────────────────────────────────────
+	\subsubsection{Paso 7: Generación de Recomendaciones}
 	
 	La función \texttt{recommend} en \texttt{ALGORITMO\_PROPUESTO.py} orquesta
 	todos los componentes anteriores. Calcula los tres scores parciales
@@ -912,8 +987,7 @@
 	La aplicación móvil fue desarrollada en Flutter utilizando el lenguaje Dart.
 	Todo el código de la interfaz se concentra en el archivo \texttt{main.dart},
 	que define la estructura visual, la lógica de estado y la comunicación con
-	el backend. A continuación se documenta siguiendo el mismo flujo de seis
-	pasos del backend.
+	el backend. A continuación se documenta siguiendo el mismo flujo de pasos del backend.
 	
 	% ──────────────────────────────────────────────────────
 	\subsubsection{Paso 1: Instalación de Bibliotecas Necesarias}
@@ -1271,6 +1345,244 @@
 		},
 		)
 	\end{lstlisting}
+	
+	% ======================================================
+	\section{Resultados}
+	
+	En esta sección se presentan los resultados obtenidos a partir de la
+	ejecución del sistema de recomendación híbrido bajo distintas condiciones
+	de entrada. El análisis es de carácter descriptivo: se documentan ejemplos
+	concretos de salida del sistema, se comparan los scores individuales y el
+	score final ante diferentes ubicaciones geográficas, y se discute la
+	coherencia de los resultados en relación con el diseño del algoritmo.
+	No se formulan métricas de precisión cuantitativa dado que el conjunto
+	de datos es sintético y no cuenta con una verdad de referencia
+	(\textit{ground truth}) independiente del proceso de generación.
+	
+	% ──────────────────────────────────────────────────────
+	\subsection{Condiciones de prueba}
+	
+	Se realizaron tres consultas al endpoint
+	\texttt{GET /recomendar/\{user\_id\}} bajo condiciones de entrada distintas,
+	con el propósito de observar la sensibilidad del algoritmo ante cambios
+	en la ubicación geográfica del usuario. Las coordenadas utilizadas se
+	describen en la Tabla~\ref{tab:coordenadas_prueba}.
+	
+	\begin{table}[H]
+		\centering
+		\caption{Coordenadas utilizadas en las pruebas de evaluación.}
+		\label{tab:coordenadas_prueba}
+		\begin{tabular}{llll}
+			\hline
+			\textbf{Escenario} & \textbf{Referencia geográfica} & \textbf{Latitud} & \textbf{Longitud} \\
+			\hline
+			Prueba 1 & Universidad Politécnica de Pachuca (UPP) & 19.9796 & $-$98.6856 \\
+			Prueba 2 & Zona norte de Pachuca de Soto            & 20.0613 & $-$98.7747 \\
+			Prueba 3 & Sin coordenadas (fallback del sistema)   & 20.0671 & $-$98.7302 \\
+			\hline
+		\end{tabular}
+	\end{table}
+	
+	En la Prueba 3 no se proporcionaron coordenadas en la solicitud, por lo que
+	el sistema activó su mecanismo de fallback, utilizando las coordenadas
+	predefinidas correspondientes al centro de Pachuca de Soto.
+	
+	% ──────────────────────────────────────────────────────
+	\subsection{Resultados por escenario}
+	
+	\subsubsection{Prueba 1 — Universidad Politécnica de Pachuca}
+	
+	La Tabla~\ref{tab:resultados_upp} muestra los cinco productos con mayor
+	score final recomendados desde las coordenadas de la UPP, incluyendo
+	los cuatro scores calculados por el algoritmo.
+	
+	\begin{table}[H]
+		\centering
+		\caption{Top 5 recomendaciones desde la UPP (lat: 19.9796, lon: $-$98.6856).}
+		\label{tab:resultados_upp}
+		\resizebox{\textwidth}{!}{%
+			\begin{tabular}{llccccc}
+				\hline
+				\textbf{Producto} & \textbf{Dist.} & \textbf{Calif.} & \textbf{geo} & \textbf{rating} & \textbf{content} & \textbf{final} \\
+				\hline
+				Refrigerador Samsung \#11 & 4.56 km & 4.60 & 0.8210 & 0.9000 & 0.6430 & 0.7784 \\
+				Refrigerador Samsung \#38 & 3.58 km & 4.00 & 0.8687 & 0.7500 & 0.6335 & 0.7567 \\
+				Tablet Samsung \#43        & 5.77 km & 3.63 & 0.7622 & 0.6562 & 0.7227 & 0.7219 \\
+				Cámara Nikon \#52          & 0.89 km & 3.20 & 1.0000 & 0.5500 & 0.5194 & 0.7193 \\
+				Cámara Canon \#71          & 4.30 km & 3.13 & 0.8338 & 0.5312 & 0.7142 & 0.7163 \\
+				\hline
+		\end{tabular}}
+	\end{table}
+	
+	El caso más ilustrativo de esta prueba es la Cámara Nikon \#52: es el
+	producto físicamente más cercano al usuario (0.89 km), obteniendo el
+	\textit{geo\_score} máximo posible de 1.0000, y aun así queda en cuarta
+	posición. La razón es que sus scores de calificación (0.5500) y contenido
+	(0.5194) son los más bajos del grupo, lo que resulta en un score final
+	de 0.7193. En contraste, el Refrigerador Samsung \#11, a 4.56 km,
+	combina un \textit{geo\_score} alto (0.8210) con el \textit{rating\_score}
+	más elevado del conjunto (0.9000), resultando en el mayor score final
+	(0.7784). Este comportamiento evidencia que el algoritmo híbrido no
+	es un simple ordenamiento por distancia, sino que pondera de forma
+	equilibrada los tres componentes.
+	
+	\subsubsection{Prueba 2 — Zona norte de Pachuca de Soto}
+	
+	La Tabla~\ref{tab:resultados_casa} muestra los cinco productos recomendados
+	desde una ubicación en la zona norte de Pachuca, aproximadamente 12 km
+	al noroeste de la UPP.
+	
+	\begin{table}[H]
+		\centering
+		\caption{Top 5 recomendaciones desde zona norte de Pachuca (lat: 20.0613, lon: $-$98.7747).}
+		\label{tab:resultados_casa}
+		\resizebox{\textwidth}{!}{%
+			\begin{tabular}{llccccc}
+				\hline
+				\textbf{Producto} & \textbf{Dist.} & \textbf{Calif.} & \textbf{geo} & \textbf{rating} & \textbf{content} & \textbf{final} \\
+				\hline
+				Refrigerador Samsung \#87 & 0.35 km & 4.25 & 1.0000 & 0.8125 & 0.6179 & 0.8194 \\
+				Licuadora Ninja \#9        & 0.99 km & 4.00 & 0.9547 & 0.7500 & 0.6070 & 0.7818 \\
+				Tablet Samsung \#96        & 1.19 km & 2.67 & 0.9405 & 0.4167 & 0.8387 & 0.7739 \\
+				Cámara Canon \#73          & 1.71 km & 2.50 & 0.9041 & 0.3750 & 0.8888 & 0.7665 \\
+				Smart TV Sony \#74         & 4.06 km & 4.67 & 0.7397 & 0.9167 & 0.6465 & 0.7513 \\
+				\hline
+		\end{tabular}}
+	\end{table}
+	
+	En esta prueba, el Refrigerador Samsung \#87 ocupa la primera posición
+	con el score final más alto de los tres escenarios (0.8194), combinando
+	el \textit{geo\_score} máximo (1.0000, a tan solo 0.35 km) con una
+	calificación promedio alta (4.25). Destaca también el caso de la
+	Cámara Canon \#73 en cuarta posición: con la calificación más baja
+	del grupo (2.50, \textit{rating\_score} = 0.3750), alcanza el
+	\textit{content\_score} más alto del conjunto (0.8888), lo que le
+	permite mantenerse en el top 5. Esto refleja la contribución real del
+	componente de análisis de contenido en el score final. El Smart TV
+	Sony \#74, a pesar de tener la calificación más alta del grupo (4.67),
+	queda en última posición debido a su mayor distancia (4.06 km,
+	\textit{geo\_score} = 0.7397).
+	
+	\subsubsection{Prueba 3 — Sin coordenadas (fallback)}
+	
+	La Tabla~\ref{tab:resultados_fallback} muestra los resultados obtenidos
+	cuando el endpoint recibe una solicitud sin parámetros de ubicación,
+	activando el mecanismo de fallback con las coordenadas predefinidas
+	del centro de Pachuca de Soto.
+	
+	\begin{table}[H]
+		\centering
+		\caption{Top 5 recomendaciones con coordenadas de fallback (lat: 20.0671, lon: $-$98.7302).}
+		\label{tab:resultados_fallback}
+		\resizebox{\textwidth}{!}{%
+			\begin{tabular}{llccccc}
+				\hline
+				\textbf{Producto} & \textbf{Dist.} & \textbf{Calif.} & \textbf{geo} & \textbf{rating} & \textbf{content} & \textbf{final} \\
+				\hline
+				Smart TV Sony \#74          & 3.11 km & 4.67 & 0.7923 & 0.9167 & 0.6465 & 0.7724 \\
+				iPhone 13 \#10              & 3.98 km & 5.00 & 0.7272 & 1.0000 & 0.6010 & 0.7513 \\
+				Tablet Samsung \#83         & 1.38 km & 3.00 & 0.9220 & 0.5000 & 0.7173 & 0.7449 \\
+				Laptop Lenovo ThinkPad \#28 & 2.64 km & 4.00 & 0.8276 & 0.7500 & 0.6209 & 0.7358 \\
+				Router TP-Link \#78         & 2.78 km & 3.17 & 0.8172 & 0.5417 & 0.7419 & 0.7220 \\
+				\hline
+		\end{tabular}}
+	\end{table}
+	
+	El iPhone 13 \#10 es el único producto en las tres pruebas que alcanza
+	el \textit{rating\_score} máximo de 1.0000, correspondiente a una
+	calificación promedio perfecta de 5.00. A pesar de ello, queda en
+	segunda posición porque su \textit{geo\_score} (0.7272) es el más bajo
+	del conjunto, penalizado por su mayor distancia relativa (3.98 km).
+	Esto confirma, desde el lado del \textit{rating\_score}, el mismo
+	principio observado en la Prueba 1 desde el lado del \textit{geo\_score}:
+	ningún factor individual domina el resultado de forma absoluta.
+	
+	% ──────────────────────────────────────────────────────
+	\subsection{Análisis comparativo}
+	
+	La Tabla~\ref{tab:comparativa} consolida los productos únicos
+	recomendados en los tres escenarios.
+	
+	\begin{table}[H]
+		\centering
+		\caption{Comparativa de productos recomendados por escenario.}
+		\label{tab:comparativa}
+		\begin{tabular}{lccc}
+			\hline
+			\textbf{Producto}           & \textbf{Prueba 1 (UPP)} & \textbf{Prueba 2 (Norte)} & \textbf{Prueba 3 (Fallback)} \\
+			\hline
+			Refrigerador Samsung \#11   & \checkmark & --         & --         \\
+			Refrigerador Samsung \#38   & \checkmark & --         & --         \\
+			Tablet Samsung \#43         & \checkmark & --         & --         \\
+			Cámara Nikon \#52           & \checkmark & --         & --         \\
+			Cámara Canon \#71           & \checkmark & --         & --         \\
+			Refrigerador Samsung \#87   & --         & \checkmark & --         \\
+			Licuadora Ninja \#9         & --         & \checkmark & --         \\
+			Tablet Samsung \#96         & --         & \checkmark & --         \\
+			Cámara Canon \#73           & --         & \checkmark & --         \\
+			Smart TV Sony \#74          & --         & \checkmark & \checkmark \\
+			iPhone 13 \#10              & --         & --         & \checkmark \\
+			Tablet Samsung \#83         & --         & --         & \checkmark \\
+			Laptop Lenovo ThinkPad \#28 & --         & --         & \checkmark \\
+			Router TP-Link \#78         & --         & --         & \checkmark \\
+			\hline
+			\textbf{Total únicos}       & 5          & 5          & 5          \\
+			\hline
+		\end{tabular}
+	\end{table}
+	
+	De los 14 productos únicos identificados, únicamente el Smart TV Sony
+	\#74 aparece en más de un escenario (Pruebas 2 y 3). Esto es coherente
+	con la proximidad geográfica entre ambas ubicaciones de referencia
+	(aproximadamente 1.5 km de distancia), donde el mismo producto obtiene
+	\textit{geo\_scores} similares: 0.7397 desde la zona norte y 0.7923
+	desde el fallback. Los 13 productos restantes son exclusivos de su
+	respectivo escenario, confirmando que el componente geográfico diferencia
+	efectivamente las recomendaciones según la posición del usuario.
+	
+	% ──────────────────────────────────────────────────────
+	\subsection{Discusión}
+	
+	Los resultados demuestran que el sistema opera conforme a su diseño.
+	Se identifican cuatro comportamientos que validan el funcionamiento
+	del algoritmo híbrido:
+	
+	\textbf{Sensibilidad geográfica.} Las tres pruebas producen conjuntos
+	de productos mayoritariamente distintos, con distancias máximas
+	inferiores a 6 km en todos los casos. Esto confirma que el
+	\textit{geo\_score} cumple su función de priorizar productos
+	físicamente accesibles desde la ubicación del usuario.
+	
+	\textbf{El score geográfico máximo no garantiza el primer lugar.}
+	En la Prueba 1, la Cámara Nikon \#52 obtiene \textit{geo\_score} =
+	1.0000 por ser el producto más cercano (0.89 km), pero sus scores de
+	calificación y contenido más bajos resultan en el cuarto lugar.
+	Inversamente, en la Prueba 2 el Refrigerador Samsung \#87 también
+	obtiene \textit{geo\_score} = 1.0000, pero en este caso sí lidera
+	el ranking porque combina esa cercanía máxima con una calificación
+	alta (4.25, \textit{rating\_score} = 0.8125). La diferencia entre
+	ambos casos ilustra cómo la combinación ponderada produce resultados
+	matizados según el perfil completo de cada producto.
+	
+	\textbf{El score de calificación máximo tampoco garantiza el primer
+		lugar.} En la Prueba 3, el iPhone 13 \#10 con calificación perfecta
+	de 5.00 (\textit{rating\_score} = 1.0000) queda en segunda posición
+	porque su distancia relativa le otorga el \textit{geo\_score} más
+	bajo del grupo (0.7272). Ningún factor individual domina el resultado
+	de forma absoluta.
+	
+	\textbf{Coherencia del mecanismo de fallback.} El Smart TV Sony \#74
+	aparece como resultado en las Pruebas 2 y 3, con scores finales
+	muy similares (0.7513 y 0.7724). Esto confirma que el fallback produce
+	resultados geográficamente coherentes con ubicaciones reales cercanas
+	a las coordenadas predefinidas.
+	
+	Una limitación que se reconoce en este análisis es que la ausencia de
+	datos reales de comportamiento de usuarios impide evaluar si las
+	recomendaciones son percibidas como relevantes en la práctica. Esta
+	validación queda propuesta como trabajo futuro, condicionada a la
+	disponibilidad de datos reales en una eventual etapa de
+	comercialización del sistema.
 	
 	% ======================================================
 	\section{Conclusiones}
