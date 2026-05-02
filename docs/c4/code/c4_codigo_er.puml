@@ -54,8 +54,8 @@ end note
 
 note right of Location
   60 registros
-  Zona: lat [19.2, 19.6]
-  Zona: lon [-99.4, -98.9]
+  Zona: lat [19.9, 20.1]
+  Zona: lon [-98.8, -98.6]
 end note
 
 note right of Product
