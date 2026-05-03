@@ -80,7 +80,7 @@
 		\end{abstract}
 		
 		\vfill
-		Ingeniería de Software
+		Ingeniería en Software
 	\end{titlepage}
 	
 	% ======================================================
@@ -106,9 +106,57 @@
 	
 	% ======================================================
 	\newpage
+	% ======================================================
 	\section{Introducción}
 	
-	Contexto de los sistemas de recomendación, uso en aplicaciones móviles y motivación del proyecto.
+	Los sistemas de recomendación se han consolidado como una herramienta
+	fundamental en el desarrollo de aplicaciones orientadas al usuario,
+	permitiendo filtrar y priorizar información relevante a partir del
+	comportamiento, las preferencias y el contexto de cada persona. Su
+	presencia es generalizada en plataformas de comercio electrónico,
+	servicios de streaming y aplicaciones de búsqueda local, donde la
+	capacidad de anticipar las necesidades del usuario representa una
+	ventaja significativa tanto para el consumidor como para el proveedor
+	del servicio.
+	
+	A pesar de los avances en técnicas de filtrado colaborativo y filtrado
+	basado en contenido, una limitación frecuente en los sistemas de
+	recomendación tradicionales es la ausencia del contexto geográfico como
+	variable de decisión. En escenarios donde la ubicación física del usuario
+	es determinante — como la búsqueda de productos o servicios disponibles
+	en una zona específica — ignorar la proximidad geográfica puede resultar
+	en recomendaciones técnicamente relevantes pero prácticamente inaccesibles.
+	
+	El presente documento reporta el desarrollo realizado en el marco del
+	Servicio Social del programa \textit{Desarrollo de soluciones tecnológicas
+		basadas en cómputo aplicado}, de la carrera de Ingeniería en Software de
+	la Universidad Politécnica de Pachuca. El trabajo consistió en implementar
+	e integrar el algoritmo de recomendación híbrido propuesto por Martínez
+	Simón dentro de una arquitectura cliente-servidor operativa, incorporando
+	geolocalización en tiempo real como variable contextual del proceso de
+	recomendación.
+	
+	El sistema resultante combina tres componentes: filtrado colaborativo
+	basado en calificaciones de usuarios, filtrado basado en contenido mediante
+	análisis de texto con TF-IDF, modelado de tópicos con LDA y clasificación
+	de sentimientos con redes neuronales, y un score geográfico calculado a
+	partir de las coordenadas GPS del dispositivo del usuario. Estos tres
+	factores se integran en una función de score final ponderada que determina
+	el orden de las recomendaciones presentadas al usuario a través de una
+	aplicación móvil multiplataforma desarrollada en Flutter.
+	
+	El documento se organiza de la siguiente manera: la Sección~2 presenta
+	la justificación del proyecto; la Sección~3 define los objetivos general
+	y específicos; la Sección~4 expone el marco teórico que sustenta las
+	técnicas empleadas; la Sección~5 describe la metodología seguida,
+	incluyendo la arquitectura del sistema, el algoritmo híbrido, las
+	tecnologías utilizadas y el conjunto de datos sintético generado para
+	las pruebas; la Sección~6 documenta la arquitectura del sistema mediante
+	el modelo C4; la Sección~7 detalla la implementación del backend y del
+	frontend paso a paso; la Sección~8 presenta los resultados obtenidos
+	a partir de tres escenarios de prueba con coordenadas geográficas
+	distintas; y las Secciones~9 y~10 exponen las conclusiones del trabajo
+	y las líneas de mejora propuestas como trabajo futuro.
 	
 	% ======================================================
 	\section{Justificación}
@@ -1587,20 +1635,116 @@
 	% ======================================================
 	\section{Conclusiones}
 	
-	Síntesis de aportes y cumplimiento de objetivos.
+	El presente proyecto tuvo como objetivo central desarrollar e integrar un
+	sistema de recomendación híbrido basado en el algoritmo propuesto por
+	Martínez Simón, incorporando geolocalización en tiempo real dentro de una
+	arquitectura cliente-servidor, con el fin de validar técnicamente su
+	funcionamiento en un entorno operativo. Los resultados obtenidos permiten
+	afirmar que dicho objetivo fue alcanzado.
+	
+	Respecto a los objetivos específicos, se identificaron los componentes
+	funcionales del algoritmo híbrido — filtrado colaborativo, filtrado basado
+	en contenido y scoring geográfico — y se establecieron sus requerimientos
+	de implementación a partir del análisis de la propuesta original. Se diseñó
+	una arquitectura distribuida de tres capas (aplicación móvil, backend REST
+	y módulo de algoritmo) que permite la integración de todos los componentes
+	de forma modular e independiente. La incorporación de coordenadas geográficas
+	en tiempo real como variable contextual se realizó mediante la fórmula de
+	Haversine y el servicio GPS del dispositivo móvil, demostrando en las
+	pruebas de evaluación que el sistema genera conjuntos de recomendaciones
+	distintos y coherentes según la posición del usuario. Los módulos de
+	obtención, procesamiento y almacenamiento de datos fueron implementados
+	mediante un conjunto de datos sintético generado programáticamente, decisión
+	motivada por restricciones de acceso a datos reales. Finalmente, la
+	validación técnica del sistema se llevó a cabo mediante tres escenarios de
+	prueba con coordenadas geográficas distintas, cuyos resultados evidenciaron
+	la estabilidad y coherencia del sistema: el producto más cercano no siempre
+	ocupa el primer lugar, el mejor calificado tampoco lo garantiza, y la
+	combinación ponderada de los tres scores produce un balance real entre
+	cercanía, calidad percibida y afinidad de contenido.
+	
+	Desde el punto de vista técnico, uno de los aprendizajes más significativos
+	del proyecto fue la separación entre la fase de entrenamiento y la fase de
+	servicio. Materializar esta decisión en dos módulos independientes
+	(\texttt{train.py} y \texttt{ALGORITMO\_PROPUESTO.py}) resolvió un
+	problema concreto de rendimiento en producción y refleja una práctica
+	estándar en sistemas de aprendizaje automático que no era evidente al
+	inicio del desarrollo. De forma similar, el diagnóstico y resolución de la
+	incompatibilidad de versiones de NumPy entre el entorno local y la
+	plataforma de despliegue Render — detectada a partir de los logs de
+	producción — representa un tipo de problema que difícilmente se anticipa
+	en entornos de desarrollo académico pero que es frecuente en contextos
+	reales de despliegue.
+	
+	Una limitación relevante fue la imposibilidad de obtener datos reales de
+	usuarios para alimentar el sistema. Se intentó el acceso a las APIs de
+	Reddit, Mastodon y Foursquare como fuentes de opiniones y reseñas de
+	productos; sin embargo, Reddit restringió el acceso a su API para
+	proyectos no comerciales, Mastodon presentó volúmenes de actividad
+	insuficientes para extraer datos significativos, y Foursquare opera bajo
+	un modelo de acceso de pago. Esta situación, documentada también en la
+	literatura de sistemas de recomendación como una barrera recurrente para
+	la investigación académica, motivó el uso de datos sintéticos como
+	alternativa metodológicamente válida para la validación técnica del sistema.
+	
+	En conjunto, el proyecto demostró que es posible implementar y desplegar
+	un sistema de recomendación híbrido funcional con geolocalización en tiempo
+	real dentro de los límites de un proyecto académico, sentando las bases
+	técnicas para una eventual evolución hacia un entorno con datos reales.
 	
 	% ======================================================
 	\section{Trabajo Futuro}
 	
-	Mejoras posibles.
+	El sistema desarrollado constituye una base técnica sólida sobre la cual
+	pueden plantearse múltiples líneas de mejora. A continuación se describen
+	las más relevantes, organizadas por área.
+	
+	\subsection*{Datos y evaluación}
+	
+	La limitación más significativa del sistema actual es el uso de datos
+	sintéticos. Como trabajo futuro prioritario se propone la incorporación
+	de datos reales de usuarios y productos, lo que requeriría establecer
+	acuerdos de acceso a fuentes de datos o implementar mecanismos propios
+	de recolección dentro de la aplicación. Paralelamente, sería necesario
+	diseñar un esquema de evaluación formal con métricas estándar de sistemas
+	de recomendación — precisión, \textit{recall} y \textit{NDCG} — sobre un
+	conjunto de prueba independiente, lo que permitiría validar la efectividad
+	del sistema más allá de su coherencia técnica.
+	
+	Complementariamente, se propone instrumentar la aplicación para registrar
+	eventos de interacción del usuario: qué productos se mostraron, cuáles
+	fueron seleccionados y qué calificación recibieron posteriormente. Este
+	historial de interacciones constituiría la base para un análisis de datos
+	real sobre el comportamiento del sistema en producción, así como para el
+	ajuste dinámico de los pesos del score final.
+	
+	\subsection*{Algoritmo}
+	
+	Los pesos de la función de score final
+	($w_{\text{geo}} = 0.40$, $w_{\text{rating}} = 0.25$,
+	$w_{\text{content}} = 0.35$) fueron calibrados de forma empírica.
+	Con datos reales de interacción, estos pesos podrían optimizarse mediante
+	técnicas de aprendizaje supervisado, adaptándolos al perfil de cada usuario
+	o a las condiciones de cada zona geográfica.
+	
+	Adicionalmente, el umbral de distancia máxima podría convertirse en un
+	parámetro configurable. En la implementación actual, productos a más de
+	50 km pueden aparecer en los resultados si sus scores de calificación y
+	contenido son suficientemente altos; establecer un radio máximo garantizaría
+	que todas las recomendaciones sean físicamente accesibles.
+	
+	\subsection*{Infraestructura y escalabilidad}
+	
+	Los datos del sistema se almacenan como archivos JSON estáticos cargados
+	en memoria al iniciar el servidor. Para un escenario con catálogos de
+	productos grandes y usuarios concurrentes, se propone migrar a una base
+	de datos relacional con extensión geoespacial (PostgreSQL + PostGIS),
+	lo que permitiría reemplazar el cálculo de Haversine en Python por
+	consultas espaciales nativas y reducir los tiempos de respuesta de forma
+	significativa.
 	
 	% ======================================================
 	\printbibliography
 	
-	% ======================================================
-	\appendix
-	\section{Anexos}
-	
-	Diagramas, capturas, código adicional.
 	
 \end{document}
