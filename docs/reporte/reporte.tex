@@ -61,26 +61,29 @@
 		\vspace*{2cm}
 		
 		{\Huge \textbf{Sistema de Recomendación Híbrido para Productos y Servicios en Aplicaciones Móviles}} \\[0.5cm]
-		{\Large Proyecto de Investigación Aplicada / Servicio Social} \\[2cm]
+		{\Large Proyecto de Investigación Aplicada} \\[2cm]
 		
-		\textbf{Autor:}\\
-		Abraham \\[0.5cm]
+		
 		
 		\textbf{Institución:}\\
-		Nombre de la institución \\[0.5cm]
+		Universidad Politécnica de Pachuca \\[0.5cm]
 		
-		\textbf{Asignatura / Programa:}\\
-		Servicio Social \\[1cm]
+		\textbf{Carrera:}\\
+		Ingeniería en Software \\[0.5cm]
+		
+		\textbf{Programa:}\\
+		Desarrollo de soluciones tecnológicas basadas en cómputo aplicado \\[0.5cm]
+		
+		\textbf{Autor:}\\
+		Peña Serrano José Abraham \\[0.5cm]
+		
+		\textbf{Matrícula:}\\
+		2331123273 \\[1.0cm]
 		
 		\textbf{Fecha:}\\
 		\today \\[2cm]
 		
-		\begin{abstract}
-			Este documento presenta el diseño e implementación de una aplicación móvil que integra un algoritmo híbrido de recomendación para productos y servicios. El sistema combina técnicas de filtrado colaborativo y basado en contenido con información contextual para mejorar la precisión de las recomendaciones. Se describe la arquitectura, la metodología empleada y los resultados preliminares obtenidos.
-		\end{abstract}
-		
 		\vfill
-		Ingeniería en Software
 	\end{titlepage}
 	
 	% ======================================================
@@ -97,12 +100,58 @@
 	\section*{Resumen}
 	\addcontentsline{toc}{section}{Resumen}
 	
-	Texto del resumen en español.
+	El presente documento reporta el desarrollo de un sistema de recomendación
+	híbrido con geolocalización en tiempo real, realizado como parte del
+	Servicio Social de la carrera de Ingeniería en Software de la Universidad
+	Politécnica de Pachuca. El sistema integra tres componentes de recomendación:
+	filtrado colaborativo basado en calificaciones de usuarios, filtrado basado
+	en contenido mediante TF-IDF, modelado de tópicos con Asignación Latente de
+	Dirichlet y clasificación de sentimientos con redes neuronales de embeddings,
+	y un score geográfico calculado mediante la fórmula de Haversine a partir de
+	las coordenadas GPS del dispositivo del usuario. Estos factores se combinan
+	en una función de score final ponderada que determina el orden de las
+	recomendaciones. La arquitectura del sistema sigue un esquema cliente-servidor
+	distribuido en tres capas: una aplicación móvil multiplataforma desarrollada
+	en Flutter, un backend REST implementado con FastAPI sobre Python 3, y un
+	módulo de algoritmo que carga en memoria los modelos previamente serializados
+	por un proceso de entrenamiento independiente. El sistema fue desplegado en
+	la plataforma Render y evaluado mediante tres escenarios de prueba con
+	coordenadas geográficas distintas dentro del área Pachuca--Zempoala, Hidalgo.
+	Los resultados evidencian que el sistema genera recomendaciones coherentes
+	y diferenciadas según la ubicación del usuario, y que la combinación
+	ponderada de los tres scores produce un balance real entre cercanía
+	geográfica, calidad percibida y afinidad de contenido.
+	
+	\textbf{Palabras clave:} sistema de recomendación híbrido, geolocalización,
+	filtrado colaborativo, filtrado basado en contenido, análisis de sentimientos,
+	FastAPI, Flutter.
 	
 	\section*{Abstract}
 	\addcontentsline{toc}{section}{Abstract}
 	
-	Text of the abstract in English.
+	This document reports the development of a hybrid recommendation system with
+	real-time geolocation, carried out as part of the Social Service program of
+	the Software Engineering degree at Universidad Politécnica de Pachuca. The
+	system integrates three recommendation components: collaborative filtering
+	based on user ratings, content-based filtering using TF-IDF, topic modeling
+	with Latent Dirichlet Allocation, and sentiment classification with embedding
+	neural networks, along with a geographic score computed via the Haversine
+	formula from the user's device GPS coordinates. These factors are combined
+	into a weighted final score function that determines the ranking of
+	recommendations. The system architecture follows a distributed client-server
+	scheme with three layers: a cross-platform mobile application developed in
+	Flutter, a REST backend implemented with FastAPI on Python 3, and an algorithm
+	module that loads pre-serialized models into memory from an independent
+	training process. The system was deployed on the Render platform and evaluated
+	through three test scenarios with different geographic coordinates within the
+	Pachuca--Zempoala area in the state of Hidalgo, Mexico. Results show that the
+	system generates coherent and differentiated recommendations according to the
+	user's location, and that the weighted combination of the three scores produces
+	a real balance between geographic proximity, perceived quality, and content
+	affinity.
+	
+	\textbf{Keywords:} hybrid recommendation system, geolocation, collaborative
+	filtering, content-based filtering, sentiment analysis, FastAPI, Flutter.
 	
 	% ======================================================
 	\newpage
